@@ -16,3 +16,19 @@ func CreateProduct(request api.CreateProductRequest) {
 		panic(err)
 	}
 }
+
+func GetProductByName(name string) entities.Product {
+	if res, err := store.GetProduct("name = ?", name); err != nil {
+		panic(err)
+	} else {
+		return res
+	}
+}
+
+func ListProducts() []entities.Product {
+	products, err := store.ListProducts()
+	if err != nil {
+		panic(err)
+	}
+	return products
+}

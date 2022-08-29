@@ -1,0 +1,14 @@
+kind: release
+product-name: test-product-2
+product-version: 0.1.0
+release-channel: DEV
+
+--- 
+
+kind: release
+product-name: test-product
+product-version: 0.2.0
+release-channel: DEV
+dependencies:
+  - product-name: test-product-2
+    min-version: "0.1.0"

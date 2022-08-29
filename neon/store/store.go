@@ -9,6 +9,7 @@ import (
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
+	"github.com/uptrace/bun/extra/bundebug"
 )
 
 type postgresStore struct {
@@ -20,21 +21,52 @@ var store = &postgresStore{}
 func CreateStore(host string, username string, password string) {
 
 	dsn := fmt.Sprintf("postgres://%s:%s@%s/neon?sslmode=disable", username, password, host)
-	fmt.Println(dsn)
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
 
+	db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
+
 	store.db = db
 
-	err := db.ResetModel(context.TODO(), (*entities.Product)(nil))
-	fmt.Println(err)
+	if err := db.ResetModel(context.TODO(), (*entities.Product)(nil)); err != nil {
+		panic(err)
+	}
+	if err := db.ResetModel(context.TODO(), (*entities.Release)(nil)); err != nil {
+		panic(err)
+	}
+
 }
 
 func IsConnected() bool {
 	return store.db != nil
 }
 
+func InsertRelease(item entities.Release) error {
+	_, err := store.db.NewInsert().Model(&item).Exec(context.TODO())
+	return err
+}
+
 func InsertProduct(product entities.Product) error {
 	_, err := store.db.NewInsert().Model(&product).Exec(context.TODO())
 	return err
+}
+
+func ListProducts() ([]entities.Product, error) {
+	items := []entities.Product{}
+	err := store.db.NewSelect().
+		Model(&items).
+		Scan(context.TODO())
+	return items, err
+}
+
+func GetProduct(query string, args ...interface{}) (entities.Product, error) {
+	var item entities.Product
+	err := store.db.NewSelect().
+		Model(&item).
+		Where(query, args...).
+		Relation("Releases", func(sq *bun.SelectQuery) *bun.SelectQuery {
+			return sq.OrderExpr("string_to_array(\"r\".\"product_version\", '.')::int[] DESC")
+		}).
+		Scan(context.TODO())
+	return item, err
 }
