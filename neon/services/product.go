@@ -12,7 +12,7 @@ func CreateProduct(request api.CreateProductRequest) {
 		ID:   uuid.New().String(),
 		Name: request.Name,
 	}
-	if err := store.InsertProduct(internalProduct); err != nil {
+	if err := store.Insert(internalProduct); err != nil {
 		panic(err)
 	}
 }
@@ -26,7 +26,7 @@ func GetProductByName(name string) entities.Product {
 }
 
 func ListProducts() []entities.Product {
-	products, err := store.ListProducts()
+	products, err := store.List[entities.Product]()
 	if err != nil {
 		panic(err)
 	}

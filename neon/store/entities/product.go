@@ -16,4 +16,5 @@ type Product struct {
 	Name string `bun:",unique" json:"name"`
 
 	Releases []*Release `bun:"rel:has-many,join:name=product_name" json:"releases,omitempty"`
+	Installs []*Install `bun:"rel:has-many,join:name=product_name" json:"installs,omitempty"`
 }

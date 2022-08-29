@@ -34,6 +34,12 @@ func CreateStore(host string, username string, password string) {
 	if err := db.ResetModel(context.TODO(), (*entities.Release)(nil)); err != nil {
 		panic(err)
 	}
+	if err := db.ResetModel(context.TODO(), (*entities.Install)(nil)); err != nil {
+		panic(err)
+	}
+	if err := db.ResetModel(context.TODO(), (*entities.App)(nil)); err != nil {
+		panic(err)
+	}
 
 }
 
@@ -41,18 +47,13 @@ func IsConnected() bool {
 	return store.db != nil
 }
 
-func InsertRelease(item entities.Release) error {
+func Insert[T any](item T) error {
 	_, err := store.db.NewInsert().Model(&item).Exec(context.TODO())
 	return err
 }
 
-func InsertProduct(product entities.Product) error {
-	_, err := store.db.NewInsert().Model(&product).Exec(context.TODO())
-	return err
-}
-
-func ListProducts() ([]entities.Product, error) {
-	items := []entities.Product{}
+func List[T any]() ([]T, error) {
+	items := []T{}
 	err := store.db.NewSelect().
 		Model(&items).
 		Scan(context.TODO())

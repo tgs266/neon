@@ -9,4 +9,7 @@ func Routes(r *gin.Engine) {
 	r.POST("/api/v1/products", CreateProduct)
 
 	r.POST("/api/v1/releases", CreateRelease)
+
+	r.GET("/api/v1/apps", ListApps)
+	r.POST("/api/v1/apps", CreateApp)
 }

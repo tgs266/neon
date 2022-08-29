@@ -1,0 +1,5 @@
+kind: app
+name: test-app
+products:
+  - test-product
+  - test-product-2

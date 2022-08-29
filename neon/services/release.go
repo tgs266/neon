@@ -15,7 +15,7 @@ func CreateRelease(request api.CreateReleaseRequest) {
 		ReleaseChannel: request.ReleaseChannel,
 		Dependencies:   request.Dependencies,
 	}
-	if err := store.InsertRelease(item); err != nil {
+	if err := store.Insert(item); err != nil {
 		panic(err)
 	}
 }
