@@ -60,7 +60,7 @@ func handleAppInstalls(appName string, update bool) {
 	}
 
 	for k, v := range out {
-		cmd := exec.Command("helm", "install")
+		cmd := exec.Command("helm", "install", k, "bitnami/joomla")
 		var out bytes.Buffer
 		cmd.Stdout = &out
 
