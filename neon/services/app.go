@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"os/exec"
 
 	"github.com/tgs266/neon/neon/api"
@@ -58,7 +59,9 @@ func handleAppInstalls(appName string, update bool) {
 	}
 
 	for k, v := range out {
-		exec.Command("helm", "install")
+		cmd := exec.Command("helm", "install")
+		err := cmd.Run()
+		fmt.Println(err)
 		installs = append(installs, entities.Install{
 			AppName:        app.Name,
 			ProductName:    k,
