@@ -12,8 +12,7 @@ type Product struct {
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"createdAt"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updatedAt"`
 
-	ID   string `bun:",pk" json:"id"`
-	Name string `bun:",unique" json:"name"`
+	Name string `bun:",pk" json:"name"`
 
 	Releases []*Release `bun:"rel:has-many,join:name=product_name" json:"releases,omitempty"`
 	Installs []*Install `bun:"rel:has-many,join:name=product_name" json:"installs,omitempty"`

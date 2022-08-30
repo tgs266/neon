@@ -12,11 +12,9 @@ type Release struct {
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"createdAt"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updatedAt"`
 
-	ReleaseId string `bun:",pk" json:"releaseId"`
-
-	ProductName    string `bun:",unique" json:"productName"`
-	ProductVersion string `bun:",unique" json:"productVersion"`
-	ReleaseChannel string `json:"releaseChannel"`
+	ProductName    string `bun:",pk" json:"productName"`
+	ProductVersion string `bun:",pk" json:"productVersion"`
+	ReleaseChannel int    `json:"releaseChannel"`
 
 	Recalled bool `json:"recalled"`
 

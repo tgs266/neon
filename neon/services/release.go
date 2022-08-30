@@ -1,21 +1,27 @@
 package services
 
 import (
-	"github.com/google/uuid"
+	"fmt"
+
 	"github.com/tgs266/neon/neon/api"
 	"github.com/tgs266/neon/neon/store"
 	"github.com/tgs266/neon/neon/store/entities"
 )
 
 func CreateRelease(request api.CreateReleaseRequest) {
+	intRc, err := store.ReleaseChannelRepository().FlipToInt(request.ReleaseChannel)
+	if err != nil || intRc == -1 {
+		fmt.Println(intRc)
+		panic(err)
+	}
 	item := entities.Release{
-		ReleaseId:      uuid.New().String(),
+		// ReleaseId:      uuid.New().String(),
 		ProductName:    request.ProductName,
 		ProductVersion: request.ProductVersion,
-		ReleaseChannel: request.ReleaseChannel,
+		ReleaseChannel: intRc,
 		Dependencies:   request.Dependencies,
 	}
-	if err := store.Insert(item); err != nil {
+	if err := store.ReleaseRepository().Insert(item); err != nil {
 		panic(err)
 	}
 }

@@ -1,5 +1,6 @@
 kind: app
 name: test-app
 products:
-  - test-product
+  - test-product-1
   - test-product-2
+  - test-product-3

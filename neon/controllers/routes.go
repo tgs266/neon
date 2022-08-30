@@ -11,5 +11,6 @@ func Routes(r *gin.Engine) {
 	r.POST("/api/v1/releases", CreateRelease)
 
 	r.GET("/api/v1/apps", ListApps)
-	r.POST("/api/v1/apps", CreateApp)
+	r.GET("/api/v1/apps/:name", GetApp)
+	r.POST("/api/v1/apps", ApplyApp)
 }

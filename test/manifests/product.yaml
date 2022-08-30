@@ -1,7 +1,11 @@
 kind: product
-name: test-product
+name: test-product-1
 
 ---
 
 kind: product
 name: test-product-2
+---
+
+kind: product
+name: test-product-3

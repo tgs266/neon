@@ -6,13 +6,12 @@ import (
 	"github.com/uptrace/bun"
 )
 
-type Install struct {
-	bun.BaseModel `bun:"table:installs,alias:i"`
+type ReleaseChannel struct {
+	bun.BaseModel `bun:"table:release_channels,alias:rcs"`
 
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"createdAt"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updatedAt"`
 
-	AppName        string `bun:",pk" json:"appName"`
-	ProductName    string `bun:",pk" json:"productName"`
-	ReleaseVersion string `json:"releaseVersion"`
+	Name  string `bun:",pk" json:"name"`
+	Value int    `json:"value"`
 }

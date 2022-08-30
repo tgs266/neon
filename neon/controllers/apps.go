@@ -8,14 +8,20 @@ import (
 	"github.com/tgs266/neon/neon/services"
 )
 
-func CreateApp(c *gin.Context) {
-	var req api.CreateAppRequest
+func ApplyApp(c *gin.Context) {
+	var req api.ApplyAppRequest
 	c.BindJSON(&req)
-	services.CreateApp(req)
+	services.ApplyApp(req)
 	c.JSON(http.StatusOK, req)
 }
 
 func ListApps(c *gin.Context) {
 	resp := services.ListApps()
+	c.JSON(http.StatusOK, resp)
+}
+
+func GetApp(c *gin.Context) {
+	name := c.Param("name")
+	resp := services.GetAppByName(name)
 	c.JSON(http.StatusOK, resp)
 }

@@ -12,6 +12,10 @@ type App struct {
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"createdAt"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updatedAt"`
 
-	AppId string `bun:",pk" json:"appId"`
-	Name  string
+	// ID       string     `bun:",pk" json:"appId"`
+	Name     string     `bun:",pk" json:"name"`
+	Products []string   `json:"products"`
+	Installs []*Install `bun:"rel:has-many,join:name=app_name" json:"installs,omitempty"`
+
+	ReleaseChannel int `json:"releaseChannel"`
 }
