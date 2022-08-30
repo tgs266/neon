@@ -8,7 +8,7 @@ import (
 )
 
 func installUpdateHelmChart(name string, release *entities.Release) (string, error) {
-	cmd := exec.Command("helm", "update", name, release.HelmChart, "--version="+release.ProductVersion)
+	cmd := exec.Command("helm", "upgrade", name, release.HelmChart, "--version="+release.ProductVersion)
 	var out bytes.Buffer
 	cmd.Stderr = &out
 
