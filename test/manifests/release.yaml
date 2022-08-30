@@ -1,5 +1,5 @@
 kind: release
 product-name: test-product-1
-product-version: 0.1.0
+product-version: 4.2.0
 release-channel: DEV
 helm-chart: bitnami/joomla

@@ -1,9 +1,7 @@
 package services
 
 import (
-	"bytes"
 	"fmt"
-	"os/exec"
 
 	"github.com/tgs266/neon/neon/api"
 	"github.com/tgs266/neon/neon/store"
@@ -60,14 +58,10 @@ func handleAppInstalls(appName string, update bool) {
 	}
 
 	for k, v := range out {
-		cmd := exec.Command("helm", "install", k, "bitnami/joomla")
-		var out bytes.Buffer
-		cmd.Stdout = &out
-
-		err := cmd.Run()
-		fmt.Println(out.String())
+		err := installUpdateHelmChart(k, v)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("failed to install", err)
+			continue
 		}
 		installs = append(installs, entities.Install{
 			AppName:        app.Name,
