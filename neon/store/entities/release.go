@@ -15,6 +15,7 @@ type Release struct {
 	ProductName    string `bun:",pk" json:"productName"`
 	ProductVersion string `bun:",pk" json:"productVersion"`
 	ReleaseChannel int    `json:"releaseChannel"`
+	HelmChart      string `json:"helmChart"`
 
 	Recalled bool `json:"recalled"`
 

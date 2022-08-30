@@ -6,5 +6,6 @@ type CreateReleaseRequest struct {
 	ProductName    string                `json:"productName"`
 	ProductVersion string                `json:"productVersion"`
 	ReleaseChannel string                `json:"releaseChannel"`
+	HelmChart      string                `json:"helmChart"`
 	Dependencies   []entities.Dependency `json:"dependencies"`
 }
