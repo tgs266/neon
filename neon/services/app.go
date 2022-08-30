@@ -58,9 +58,9 @@ func handleAppInstalls(appName string, update bool) {
 	}
 
 	for k, v := range out {
-		err := installUpdateHelmChart(k, v)
+		stderr, err := installUpdateHelmChart(k, v)
 		if err != nil {
-			fmt.Println("failed to install", err)
+			fmt.Println("failed to install", stderr)
 			continue
 		}
 		installs = append(installs, entities.Install{
