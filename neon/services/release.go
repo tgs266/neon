@@ -20,6 +20,7 @@ func CreateRelease(request api.CreateReleaseRequest) {
 		ProductVersion: request.ProductVersion,
 		ReleaseChannel: intRc,
 		Dependencies:   request.Dependencies,
+		HelmChart:      request.HelmChart,
 	}
 	if err := store.ReleaseRepository().Insert(item); err != nil {
 		panic(err)

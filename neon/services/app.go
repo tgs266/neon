@@ -1,6 +1,8 @@
 package services
 
 import (
+	"os/exec"
+
 	"github.com/tgs266/neon/neon/api"
 	"github.com/tgs266/neon/neon/store"
 	"github.com/tgs266/neon/neon/store/entities"
@@ -56,6 +58,7 @@ func handleAppInstalls(appName string, update bool) {
 	}
 
 	for k, v := range out {
+		exec.Command("helm", "install")
 		installs = append(installs, entities.Install{
 			AppName:        app.Name,
 			ProductName:    k,
