@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bytes"
 	"fmt"
 	"os/exec"
 
@@ -60,8 +61,14 @@ func handleAppInstalls(appName string, update bool) {
 
 	for k, v := range out {
 		cmd := exec.Command("helm", "install")
+		var out bytes.Buffer
+		cmd.Stdout = &out
+
 		err := cmd.Run()
-		fmt.Println(err)
+		fmt.Println(out.String())
+		if err != nil {
+			fmt.Println(err)
+		}
 		installs = append(installs, entities.Install{
 			AppName:        app.Name,
 			ProductName:    k,
