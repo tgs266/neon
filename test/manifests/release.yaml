@@ -3,3 +3,9 @@ product-name: test-product-1
 product-version: 4.2.0
 release-channel: DEV
 helm-chart: bitnami/joomla
+---
+kind: release
+product-name: test-product-2
+product-version: 9.4.5
+release-channel: DEV
+helm-chart: bitnami/drupal

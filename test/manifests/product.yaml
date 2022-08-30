@@ -1,2 +1,5 @@
 kind: product
 name: test-product-1
+---
+kind: product
+name: test-product-2
