@@ -11,7 +11,7 @@ import (
 func ApplyApp(c *gin.Context) {
 	var req api.ApplyAppRequest
 	c.BindJSON(&req)
-	services.ApplyApp(req)
+	services.ApplyApp(c, req)
 	c.JSON(http.StatusOK, req)
 }
 
