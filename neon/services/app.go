@@ -1,8 +1,7 @@
 package services
 
 import (
-	"fmt"
-
+	"github.com/rs/zerolog/log"
 	"github.com/tgs266/neon/neon/api"
 	"github.com/tgs266/neon/neon/store"
 	"github.com/tgs266/neon/neon/store/entities"
@@ -40,7 +39,7 @@ func updateApp(request api.ApplyAppRequest) {
 }
 
 func handleAppInstalls(appName string, update bool) {
-	app, _ := store.AppRepository().Query(false, "name = ?", appName)
+	app, _ := store.AppRepository().Query(true, "name = ?", appName)
 
 	products, err := store.PullProducts(app.Products, app.ReleaseChannel)
 	if err != nil {
@@ -50,17 +49,25 @@ func handleAppInstalls(appName string, update bool) {
 		panic("could not install requested products: no products found")
 	}
 	installs := []entities.Install{}
+	currentInstalls := app.Installs
 
 	// actually generate install here
-	out := resolveDependencies(products)
-	if out == nil {
+	installMap := resolveDependencies(products)
+	if installMap == nil {
 		panic("Failed to resolve dependencies")
 	}
 
-	for k, v := range out {
-		stderr, err := installUpdateHelmChart(k, v)
-		if err != nil {
-			fmt.Println("failed to install", stderr)
+	for _, install := range currentInstalls {
+		if expectedInstall, exists := installMap[install.ProductName]; exists {
+			if expectedInstall.ProductVersion == install.ReleaseVersion {
+				delete(installMap, install.ProductName)
+			}
+		}
+	}
+
+	for k, v := range installMap {
+		if stderr, err := installUpdateHelmChart(k, v); err != nil {
+			log.Error().Err(err).Msg(stderr)
 			continue
 		}
 		installs = append(installs, entities.Install{
