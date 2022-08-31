@@ -15,4 +15,5 @@ type Install struct {
 	AppName        string `bun:",pk" json:"appName"`
 	ProductName    string `bun:",pk" json:"productName"`
 	ReleaseVersion string `json:"releaseVersion"`
+	Error          string `json:"error"`
 }

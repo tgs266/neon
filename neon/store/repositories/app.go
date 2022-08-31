@@ -44,3 +44,13 @@ func (a AppRepository) Query(includeInstalls bool, query string, args ...interfa
 	err := call.Scan(context.TODO())
 	return item, err
 }
+
+func (a AppRepository) SetAppError(appName string, errString string) error {
+	var item entities.App
+	_, err := a.DB.NewUpdate().
+		Model(&item).
+		Where("name = ?", appName).
+		Set("error = ?", errString).
+		Exec(context.TODO())
+	return err
+}

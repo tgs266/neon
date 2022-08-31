@@ -18,4 +18,6 @@ type App struct {
 	Installs []*Install `bun:"rel:has-many,join:name=app_name" json:"installs,omitempty"`
 
 	ReleaseChannel int `json:"releaseChannel"`
+
+	Error string `json:"error"`
 }
