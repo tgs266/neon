@@ -19,5 +19,6 @@ type App struct {
 
 	ReleaseChannel int `json:"releaseChannel"`
 
-	Error string `json:"error"`
+	Error         string `json:"error"`
+	InstallStatus string `json:"installStatus"`
 }

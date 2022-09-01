@@ -22,13 +22,18 @@ func ListProducts(c *gin.Context) {
 
 func GetProduct(c *gin.Context) {
 	productName := c.Param("name")
-	resp := services.GetProductByName(productName)
-	resp.Releases = nil
+	resp := services.GetProductByName(c, productName)
 	c.JSON(http.StatusOK, resp)
 }
 
 func GetProductReleases(c *gin.Context) {
 	productName := c.Param("name")
-	resp := services.GetProductByName(productName).Releases
+	resp := services.GetProductByName(c, productName).Releases
+	c.JSON(http.StatusOK, resp)
+}
+
+func GetProductInstalls(c *gin.Context) {
+	productName := c.Param("name")
+	resp := services.GetProductByName(c, productName).Installs
 	c.JSON(http.StatusOK, resp)
 }

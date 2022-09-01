@@ -54,3 +54,13 @@ func (a AppRepository) SetAppError(appName string, errString string) error {
 		Exec(context.TODO())
 	return err
 }
+
+func (a AppRepository) SetAppField(appName string, fieldName, str string) error {
+	var item entities.App
+	_, err := a.DB.NewUpdate().
+		Model(&item).
+		Where("name = ?", appName).
+		Set(fieldName+" = ?", str).
+		Exec(context.TODO())
+	return err
+}

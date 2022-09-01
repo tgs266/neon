@@ -15,3 +15,12 @@ func installUpdateHelmChart(namespace string, name string, release *entities.Rel
 	err := cmd.Run()
 	return out.String(), err
 }
+
+func deleteHelmRelease(namespace string, name string) (string, error) {
+	cmd := exec.Command("helm", "uninstall", name, "--namespace="+namespace)
+	var out bytes.Buffer
+	cmd.Stderr = &out
+
+	err := cmd.Run()
+	return out.String(), err
+}

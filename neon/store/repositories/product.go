@@ -29,7 +29,7 @@ func (r ProductRepository) Update(item entities.Product) error {
 	return err
 }
 
-func (r ProductRepository) Query(includeReleases bool, query string, args ...interface{}) (entities.Product, error) {
+func (r ProductRepository) Query(includeReleases bool, includeInstalls bool, query string, args ...interface{}) (entities.Product, error) {
 	var item entities.Product
 	call := r.DB.NewSelect().
 		Model(&item).
@@ -37,6 +37,31 @@ func (r ProductRepository) Query(includeReleases bool, query string, args ...int
 
 	if includeReleases {
 		call = call.Relation("Releases")
+	}
+
+	if includeInstalls {
+		call = call.Relation("Installs")
+	}
+
+	err := call.Scan(context.TODO())
+	return item, err
+}
+
+func (r ProductRepository) Search(limit, offset int, queries ...Query) ([]entities.Product, error) {
+	var item []entities.Product
+	call := r.DB.NewSelect().
+		Model(&item)
+
+	for _, q := range queries {
+		call = q.Apply(call)
+	}
+
+	if offset >= 0 {
+		call = call.Offset(offset)
+	}
+
+	if limit >= 0 {
+		call = call.Limit(limit)
 	}
 
 	err := call.Scan(context.TODO())

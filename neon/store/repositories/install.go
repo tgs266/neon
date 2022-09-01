@@ -44,3 +44,13 @@ func (a InstallRepository) UpdateBatch(item []entities.Install) error {
 		Exec(context.TODO())
 	return err
 }
+
+func (a InstallRepository) DeleteByPk(appName string, ProductName string) error {
+	var item entities.Install
+	_, err := a.DB.NewDelete().
+		Model(&item).
+		Where("app_name = ?", appName).
+		Where("product_name = ?", ProductName).
+		Exec(context.TODO())
+	return err
+}

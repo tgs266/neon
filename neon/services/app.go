@@ -56,8 +56,11 @@ func handleAppInstalls(appName string, update bool) {
 	installs := []entities.Install{}
 	currentInstalls := app.Installs
 
+	store.AppRepository().SetAppField(app.Name, "install_status", "IN_PROGRESS")
+
 	// actually generate install here
 	installMap := resolveDependencies(products)
+	deleteList := []string{}
 	if installMap == nil {
 		store.AppRepository().SetAppError(app.Name, "failed to resolve dependencies")
 		return
@@ -68,11 +71,23 @@ func handleAppInstalls(appName string, update bool) {
 			if expectedInstall.ProductVersion == install.ReleaseVersion {
 				delete(installMap, install.ProductName)
 			}
+		} else {
+			deleteList = append(deleteList, install.ProductName)
 		}
 	}
 
+	hasInstallError := false
+
+	for _, i := range deleteList {
+		deleteHelmRelease(app.Name, i)
+		store.InstallRepository().DeleteByPk(app.Name, i)
+	}
+
 	for k, v := range installMap {
-		stderr, _ := installUpdateHelmChart(app.Name, k, v)
+		stderr, err := installUpdateHelmChart(app.Name, k, v)
+		if err != nil {
+			hasInstallError = true
+		}
 		installs = append(installs, entities.Install{
 			AppName:        app.Name,
 			ProductName:    k,
@@ -81,9 +96,17 @@ func handleAppInstalls(appName string, update bool) {
 		})
 	}
 
-	if err := store.InstallRepository().InsertBatch(installs); err != nil {
-		store.AppRepository().SetAppError(app.Name, "failed to store installs in database")
-		return
+	if hasInstallError {
+		store.AppRepository().SetAppField(app.Name, "install_status", "FAILED")
+	} else {
+		store.AppRepository().SetAppField(app.Name, "install_status", "COMPLETE")
+	}
+
+	if len(installs) != 0 {
+		if err := store.InstallRepository().InsertBatch(installs); err != nil {
+			store.AppRepository().SetAppError(app.Name, "failed to store installs in database")
+			return
+		}
 	}
 	store.AppRepository().SetAppError(app.Name, "")
 }
