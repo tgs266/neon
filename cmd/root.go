@@ -39,7 +39,8 @@ to quickly create a Cobra application.`,
 		username, _ := cmd.Flags().GetString("pg-username")
 		password, _ := cmd.Flags().GetString("pg-password")
 		port, _ := cmd.Flags().GetString("port")
-		neon.Start(postgres, username, password, port)
+		ui, _ := cmd.Flags().GetBool("ui")
+		neon.Start(postgres, username, password, port, ui)
 	},
 }
 
@@ -59,4 +60,5 @@ func init() {
 	rootCmd.Flags().String("pg-username", "admin", "Postgres username.")
 	rootCmd.Flags().String("pg-password", "admin", "Postgres password.")
 	rootCmd.Flags().String("port", "5000", "The port the warehouse listens on.")
+	rootCmd.Flags().Bool("ui", true, "host ui")
 }
