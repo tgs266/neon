@@ -4,13 +4,11 @@ import (
 	"embed"
 	"io/fs"
 	"net/http"
-	"strings"
 
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/tgs266/neon/neon/controllers"
 	"github.com/tgs266/neon/neon/store"
-	"github.com/tgs266/neon/ui"
 )
 
 type embedFileSystem struct {
@@ -52,19 +50,6 @@ func Start(host, username, password, port string, useUi bool) {
 			"postgres": store.IsConnected(),
 		})
 	})
-	if useUi {
-		web := EmbedFolder(ui.Embedded, "dist", true)
-		staticServer := static.Serve("/", web)
-		r.Use(staticServer)
-		r.NoRoute(func(c *gin.Context) {
-			if c.Request.Method == http.MethodGet &&
-				!strings.ContainsRune(c.Request.URL.Path, '.') &&
-				!strings.HasPrefix(c.Request.URL.Path, "/api/") {
-				c.Request.URL.Path = "/"
-				staticServer(c)
-			}
-		})
-	}
 	controllers.Routes(r)
 	r.Run(":" + port)
 }
