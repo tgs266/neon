@@ -7,6 +7,7 @@ require github.com/Masterminds/semver/v3 v3.1.1
 require (
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/fatih/color v1.13.0 // indirect
+	github.com/gin-contrib/cors v1.4.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-contrib/static v0.0.1 // indirect
 	github.com/gin-gonic/gin v1.8.1 // indirect
