@@ -6,6 +6,7 @@ import (
 	"github.com/tgs266/neon/neon/errors"
 	"github.com/tgs266/neon/neon/store"
 	"github.com/tgs266/neon/neon/store/entities"
+	"github.com/tgs266/neon/neon/store/repositories"
 )
 
 func ApplyApp(c *gin.Context, request api.ApplyAppRequest) {
@@ -111,12 +112,23 @@ func handleAppInstalls(appName string, update bool) {
 	store.AppRepository().SetAppError(app.Name, "")
 }
 
-func ListApps() []entities.App {
-	products, err := store.List[entities.App]()
-	if err != nil {
-		panic(err)
+func ListApps(c *gin.Context, name string, limit, offest int) *api.PaginationResponse[entities.App] {
+	if res, err := store.AppRepository().Search(limit, offest, repositories.Query{Query: "name LIKE ?", Arg: "%" + name + "%"}); err != nil || res == nil {
+		return &api.PaginationResponse[entities.App]{
+			Items: []entities.App{},
+			Total: 0,
+		}
+	} else {
+		if count, err := store.ProductRepository().CountAll(); err != nil {
+			errors.NewInternal("failed to count products", err).Abort(c)
+			return nil
+		} else {
+			return &api.PaginationResponse[entities.App]{
+				Items: res,
+				Total: count,
+			}
+		}
 	}
-	return products
 }
 
 func GetAppByName(name string) entities.App {

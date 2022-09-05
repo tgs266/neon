@@ -18,14 +18,6 @@ func CreateProduct(request api.CreateProductRequest) {
 	}
 }
 
-func FindProducts(c *gin.Context, name string, limit, offest int) []entities.Product {
-	if res, err := store.ProductRepository().Search(limit, offest, repositories.Query{Query: "name LIKE ?", Arg: "%" + name + "%"}); err != nil || res == nil {
-		return []entities.Product{}
-	} else {
-		return res
-	}
-}
-
 func GetProductByName(c *gin.Context, name string) entities.Product {
 	if res, err := store.ProductRepository().Query(true, true, "name = ?", name); err != nil {
 		errors.NewNotFound("product not found", err).Abort(c)
@@ -35,10 +27,21 @@ func GetProductByName(c *gin.Context, name string) entities.Product {
 	}
 }
 
-func ListProducts() []entities.Product {
-	products, err := store.List[entities.Product]()
-	if err != nil {
-		panic(err)
+func ListProducts(c *gin.Context, name string, limit, offest int) *api.PaginationResponse[entities.Product] {
+	if res, err := store.ProductRepository().Search(limit, offest, repositories.Query{Query: "name LIKE ?", Arg: "%" + name + "%"}); err != nil || res == nil {
+		return &api.PaginationResponse[entities.Product]{
+			Items: []entities.Product{},
+			Total: 0,
+		}
+	} else {
+		if count, err := store.ProductRepository().CountAll(); err != nil {
+			errors.NewInternal("failed to count products", err).Abort(c)
+			return nil
+		} else {
+			return &api.PaginationResponse[entities.Product]{
+				Items: res,
+				Total: count,
+			}
+		}
 	}
-	return products
 }

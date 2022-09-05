@@ -64,3 +64,24 @@ func (a AppRepository) SetAppField(appName string, fieldName, str string) error 
 		Exec(context.TODO())
 	return err
 }
+
+func (r AppRepository) Search(limit, offset int, queries ...Query) ([]entities.App, error) {
+	var item []entities.App
+	call := r.DB.NewSelect().
+		Model(&item)
+
+	for _, q := range queries {
+		call = q.Apply(call)
+	}
+
+	if offset >= 0 {
+		call = call.Offset(offset)
+	}
+
+	if limit >= 0 {
+		call = call.Limit(limit)
+	}
+
+	err := call.Scan(context.TODO())
+	return item, err
+}

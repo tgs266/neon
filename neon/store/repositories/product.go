@@ -12,6 +12,14 @@ type ProductRepository struct {
 	DB *bun.DB
 }
 
+func (r ProductRepository) CountAll() (int, error) {
+	var item entities.Product
+	count, err := r.DB.NewSelect().
+		Model(&item).
+		Count(context.TODO())
+	return count, err
+}
+
 func (r ProductRepository) Insert(item entities.Product) error {
 	_, err := r.DB.NewInsert().
 		Model(&item).

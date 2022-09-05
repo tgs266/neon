@@ -15,6 +15,4 @@ func Routes(r *gin.Engine) {
 	r.GET("/api/v1/apps/:name", GetApp)
 	r.POST("/api/v1/apps", ApplyApp)
 
-	r.GET("/api/v1/search/products/", ProductSearch)
-
 }

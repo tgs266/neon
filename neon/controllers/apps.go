@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/tgs266/neon/neon/api"
@@ -16,7 +17,10 @@ func ApplyApp(c *gin.Context) {
 }
 
 func ListApps(c *gin.Context) {
-	resp := services.ListApps()
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "0"))
+	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "0"))
+	name := c.DefaultQuery("name", "")
+	resp := services.ListApps(c, name, limit, offset)
 	c.JSON(http.StatusOK, resp)
 }
 
