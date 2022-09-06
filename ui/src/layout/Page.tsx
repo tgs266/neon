@@ -6,6 +6,7 @@ import { useSpring, animated } from '@react-spring/web'
 import { Sidebar } from "./Sidebar";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { styled } from '@mui/material/styles';
+import { Box } from "@mui/system";
 
 
 const DarkModeSwitch = styled(Switch)(({ theme }) => ({
@@ -88,9 +89,9 @@ export function Page(props: { children: React.ReactNode, mode: string, setMode: 
                 <animated.div style={{ height: "100%", width: "240px", ...style }}>
                     <Sidebar />
                 </animated.div>
-                <div style={{ flexGrow: 1, padding: "10px" }}>
+                <Box sx={{ flexGrow: 1, p: 1 }}>
                     {props.children}
-                </div>
+                </Box>
             </div>
         </div>
     </Paper>

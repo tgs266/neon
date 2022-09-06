@@ -18,7 +18,7 @@ export function ProductSearch() {
     }, [name])
 
     return <div>
-        <Card sx={{ mb: 2, p: 1 }}>
+        <Card sx={{ mb: 1, p: 1 }}>
             <TextField
                 id="outlined-basic"
                 label="Name"
