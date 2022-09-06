@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid';
-import { Button, Card, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Button, Card, CardActions, CardContent, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import { ProductService } from '../services/ProductService';
 import { AppService } from '../services/AppService';
 import { Product } from '../models/product';
 import { Link } from 'react-router-dom';
+import { App } from '../models/app';
 
-export function ProductSearch() {
+export function AppSearch() {
 
     const [name, setName] = useState<string>("")
-    const [products, setProducts] = useState<Product[]>([])
+    const [apps, setApps] = useState<App[]>([])
 
     useEffect(() => {
-        ProductService.listProducts(10, 0, name).then(r => {
-            setProducts(r.data.items)
+        AppService.listApps(10, 0, name).then(r => {
+            setApps(r.data.items)
         })
     }, [name])
 
@@ -38,7 +39,7 @@ export function ProductSearch() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {products.map((row) => (
+                    {apps.map((row) => (
                         <TableRow
                             key={row.name}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -46,7 +47,7 @@ export function ProductSearch() {
                             <TableCell component="th" scope="row">
                                 {row.name}
                             </TableCell>
-                            <TableCell align="right"><Button component={Link} to={`/products/${row.name}`}>View</Button></TableCell>
+                            <TableCell align="right"><Button component={Link} to={`/apps/${row.name}`}>View</Button></TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

@@ -1,11 +1,5 @@
 kind: release
 product-name: test-product-1
-product-version: 13.3.4
-release-channel: DEV
-helm-chart: bitnami/joomla
----
-kind: release
-product-name: test-product-1
 product-version: 13.3.3
 release-channel: DEV
 helm-chart: bitnami/joomla
@@ -23,12 +17,6 @@ release-channel: DEV
 helm-chart: bitnami/joomla
 
 
----
-kind: release
-product-name: test-product-2
-product-version: 12.4.2
-release-channel: DEV
-helm-chart: bitnami/drupal
 ---
 kind: release
 product-name: test-product-2

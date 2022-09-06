@@ -25,7 +25,7 @@ var RELEASE_CHANNELS = []entities.ReleaseChannel{
 
 var store = &postgresStore{}
 
-func CreateStore(host string, username string, password string) {
+func CreateStore(host string, username string, password string, reset bool) {
 
 	dsn := fmt.Sprintf("postgres://%s:%s@%s/neon?sslmode=disable", username, password, host)
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
@@ -35,22 +35,24 @@ func CreateStore(host string, username string, password string) {
 
 	store.db = db
 
-	if err := db.ResetModel(context.TODO(), (*entities.Product)(nil)); err != nil {
-		panic(err)
+	if reset {
+		if err := db.ResetModel(context.TODO(), (*entities.Product)(nil)); err != nil {
+			panic(err)
+		}
+		if err := db.ResetModel(context.TODO(), (*entities.Release)(nil)); err != nil {
+			panic(err)
+		}
+		if err := db.ResetModel(context.TODO(), (*entities.Install)(nil)); err != nil {
+			panic(err)
+		}
+		if err := db.ResetModel(context.TODO(), (*entities.App)(nil)); err != nil {
+			panic(err)
+		}
+		if err := db.ResetModel(context.TODO(), (*entities.ReleaseChannel)(nil)); err != nil {
+			panic(err)
+		}
+		db.NewInsert().Model(&RELEASE_CHANNELS).Exec(context.TODO())
 	}
-	if err := db.ResetModel(context.TODO(), (*entities.Release)(nil)); err != nil {
-		panic(err)
-	}
-	if err := db.ResetModel(context.TODO(), (*entities.Install)(nil)); err != nil {
-		panic(err)
-	}
-	if err := db.ResetModel(context.TODO(), (*entities.App)(nil)); err != nil {
-		panic(err)
-	}
-	if err := db.ResetModel(context.TODO(), (*entities.ReleaseChannel)(nil)); err != nil {
-		panic(err)
-	}
-	db.NewInsert().Model(&RELEASE_CHANNELS).Exec(context.TODO())
 
 }
 

@@ -8,4 +8,8 @@ export class AppService {
         return axios.get("http://localhost:5000/api/v1/apps", { params: { limit, offset, name } })
     }
 
+    static async get(name = ""): Promise<AxiosResponse<App>> {
+        return axios.get(`http://localhost:5000/api/v1/apps/${name}`)
+    }
+
 }

@@ -31,7 +31,7 @@ export function Home() {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button size="small">View</Button>
+                    <Button component={Link} to="/apps" size="small">View</Button>
                 </CardActions>
             </Card>
         </Grid>
@@ -46,9 +46,7 @@ export function Home() {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Link to="/products">
-                        <Button size="small">View</Button>
-                    </Link>
+                    <Button component={Link} to="/products" size="small">View</Button>
                 </CardActions>
             </Card>
         </Grid>
