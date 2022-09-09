@@ -10,6 +10,8 @@ import (
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/tgs266/neon/neon/controllers"
+	"github.com/tgs266/neon/neon/kubernetes"
+	"github.com/tgs266/neon/neon/services"
 	"github.com/tgs266/neon/neon/store"
 	"github.com/tgs266/neon/ui"
 )
@@ -45,8 +47,9 @@ func EmbedFolder(fsEmbed embed.FS, targetPath string, index bool) static.ServeFi
 	}
 }
 
-func Start(host, username, password, port string, useUi bool, reset bool) {
+func Start(host, username, password, port string, useUi bool, reset bool, inCluster bool, kubePath string) {
 	store.CreateStore(host, username, password, reset)
+	kubernetes.InitKubernetes(inCluster, kubePath)
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/api/v1/health", func(c *gin.Context) {
@@ -68,5 +71,6 @@ func Start(host, username, password, port string, useUi bool, reset bool) {
 		})
 	}
 	controllers.Routes(r)
+	services.InitPool(2)
 	r.Run(":" + port)
 }

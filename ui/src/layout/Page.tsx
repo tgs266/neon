@@ -60,7 +60,7 @@ export function Page(props: { children: React.ReactNode, mode: string, setMode: 
     const [open, setOpen] = useState(true)
     const style = useSpring({ marginLeft: open ? "0px" : "-240px" })
     return <Paper style={{ height: '100%', width: "100%" }}>
-        <div>
+        <div style={{height: "100%"}}>
             <AppBar position="static" enableColorOnDark>
                 <Toolbar>
                     <IconButton
@@ -85,11 +85,11 @@ export function Page(props: { children: React.ReactNode, mode: string, setMode: 
                     }} /> */}
                 </Toolbar>
             </AppBar>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", height: "calc(100% - 64px)" }}>
                 <animated.div style={{ height: "100%", width: "240px", ...style }}>
                     <Sidebar />
                 </animated.div>
-                <Box sx={{ flexGrow: 1, p: 1 }}>
+                <Box sx={{ flexGrow: 1, p: 1, height: "calc(100% - 16px)" }}>
                     {props.children}
                 </Box>
             </div>

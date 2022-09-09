@@ -26,6 +26,20 @@ func ListApps(c *gin.Context) {
 
 func GetApp(c *gin.Context) {
 	name := c.Param("name")
-	resp := services.GetAppByName(name)
+	resp := services.GetAppByName(c, name)
+	c.JSON(http.StatusOK, resp)
+}
+
+func GetAppInstall(c *gin.Context) {
+	name := c.Param("name")
+	productName := c.Param("productName")
+	resp := services.GetAppInstall(c, name, productName)
+	c.JSON(http.StatusOK, resp)
+}
+
+func GetAppInstallResources(c *gin.Context) {
+	name := c.Param("name")
+	productName := c.Param("productName")
+	resp := services.GetAppInstallResources(c, name, productName)
 	c.JSON(http.StatusOK, resp)
 }

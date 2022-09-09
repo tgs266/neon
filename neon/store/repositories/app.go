@@ -12,6 +12,14 @@ type AppRepository struct {
 	DB *bun.DB
 }
 
+func (a AppRepository) CountAll() (int, error) {
+	var item entities.App
+	count, err := a.DB.NewSelect().
+		Model(&item).
+		Count(context.TODO())
+	return count, err
+}
+
 func (a AppRepository) Insert(item entities.App) error {
 	_, err := a.DB.NewInsert().
 		Model(&item).

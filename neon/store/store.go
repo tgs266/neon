@@ -10,7 +10,6 @@ import (
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
-	"github.com/uptrace/bun/extra/bundebug"
 )
 
 type postgresStore struct {
@@ -31,7 +30,7 @@ func CreateStore(host string, username string, password string, reset bool) {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
 
-	db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
+	// db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 
 	store.db = db
 
@@ -51,6 +50,12 @@ func CreateStore(host string, username string, password string, reset bool) {
 		if err := db.ResetModel(context.TODO(), (*entities.ReleaseChannel)(nil)); err != nil {
 			panic(err)
 		}
+		if err := db.ResetModel(context.TODO(), (*entities.QueuedChange)(nil)); err != nil {
+			panic(err)
+		}
+		if err := db.ResetModel(context.TODO(), (*entities.StoredChange)(nil)); err != nil {
+			panic(err)
+		}
 		db.NewInsert().Model(&RELEASE_CHANNELS).Exec(context.TODO())
 	}
 
@@ -68,6 +73,14 @@ func Count[T any](query string, args ...interface{}) (int, error) {
 func Insert[T any](item T) error {
 	_, err := store.db.NewInsert().Model(&item).Exec(context.TODO())
 	return err
+}
+
+func StoredChangeRepository() repositories.StoredChangeRepository {
+	return repositories.StoredChangeRepository{DB: store.db}
+}
+
+func QueuedChangeRepository() repositories.QueuedChangeRepository {
+	return repositories.QueuedChangeRepository{DB: store.db}
 }
 
 func AppRepository() repositories.AppRepository {

@@ -41,7 +41,9 @@ to quickly create a Cobra application.`,
 		port, _ := cmd.Flags().GetString("port")
 		ui, _ := cmd.Flags().GetBool("ui")
 		reset, _ := cmd.Flags().GetBool("reset")
-		neon.Start(postgres, username, password, port, ui, reset)
+		inCluster, _ := cmd.Flags().GetBool("in-cluster")
+		kubePath, _ := cmd.Flags().GetString("kube-path")
+		neon.Start(postgres, username, password, port, ui, reset, inCluster, kubePath)
 	},
 }
 
@@ -53,14 +55,12 @@ func Execute() {
 
 func init() {
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
 	rootCmd.Flags().String("postgres", "127.0.0.1:5432", "The address postgres binds to.")
 	rootCmd.Flags().String("pg-username", "admin", "Postgres username.")
 	rootCmd.Flags().String("pg-password", "admin", "Postgres password.")
 	rootCmd.Flags().String("port", "5000", "The port the warehouse listens on.")
 	rootCmd.Flags().Bool("ui", true, "host ui")
 	rootCmd.Flags().Bool("reset", false, "reset database")
+	rootCmd.Flags().Bool("in-cluster", false, "run in cluster mode or out of cluster")
+	rootCmd.Flags().String("kube-path", "", "path to kube config")
 }

@@ -1,9 +1,13 @@
 package services
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/tgs266/neon/neon/api"
 	"github.com/tgs266/neon/neon/errors"
+	"github.com/tgs266/neon/neon/kubernetes"
 	"github.com/tgs266/neon/neon/store"
 	"github.com/tgs266/neon/neon/store/entities"
 	"github.com/tgs266/neon/neon/store/repositories"
@@ -27,7 +31,7 @@ func createApp(c *gin.Context, request api.ApplyAppRequest) {
 		errors.NewInternal("failed to create app", err).Abort(c)
 		return
 	}
-	go handleAppInstalls(request.Name, true)
+	handleAppInstalls(request.Name, true)
 }
 
 func updateApp(c *gin.Context, request api.ApplyAppRequest) {
@@ -39,7 +43,7 @@ func updateApp(c *gin.Context, request api.ApplyAppRequest) {
 		errors.NewInternal("failed to update app", err).Abort(c)
 		return
 	}
-	go handleAppInstalls(request.Name, true)
+	handleAppInstalls(request.Name, true)
 }
 
 func handleAppInstalls(appName string, update bool) {
@@ -54,14 +58,14 @@ func handleAppInstalls(appName string, update bool) {
 		store.AppRepository().SetAppError(app.Name, "no products defined in app manifest found")
 		return
 	}
-	installs := []entities.Install{}
 	currentInstalls := app.Installs
 
-	store.AppRepository().SetAppField(app.Name, "install_status", "IN_PROGRESS")
+	// store.AppRepository().SetAppField(app.Name, "install_status", "IN_PROGRESS")
 
 	// actually generate install here
 	installMap := resolveDependencies(products)
 	deleteList := []string{}
+	updateList := []entities.Release{}
 	if installMap == nil {
 		store.AppRepository().SetAppError(app.Name, "failed to resolve dependencies")
 		return
@@ -71,45 +75,46 @@ func handleAppInstalls(appName string, update bool) {
 		if expectedInstall, exists := installMap[install.ProductName]; exists {
 			if expectedInstall.ProductVersion == install.ReleaseVersion {
 				delete(installMap, install.ProductName)
+			} else {
+				updateList = append(updateList, *expectedInstall)
 			}
 		} else {
 			deleteList = append(deleteList, install.ProductName)
 		}
 	}
 
-	hasInstallError := false
+	changes := []entities.QueuedChange{}
 
 	for _, i := range deleteList {
-		deleteHelmRelease(app.Name, i)
-		store.InstallRepository().DeleteByPk(app.Name, i)
-	}
-
-	for k, v := range installMap {
-		stderr, err := installUpdateHelmChart(app.Name, k, v)
-		if err != nil {
-			hasInstallError = true
-		}
-		installs = append(installs, entities.Install{
-			AppName:        app.Name,
-			ProductName:    k,
-			ReleaseVersion: v.ProductVersion,
-			Error:          stderr,
+		changes = append(changes, entities.QueuedChange{
+			Type:        "DELETE",
+			TargetApp:   app.Name,
+			Release:     entities.Release{ProductName: i},
+			LastChecked: time.Now(),
+			ID:          uuid.New().String(),
 		})
 	}
 
-	if hasInstallError {
-		store.AppRepository().SetAppField(app.Name, "install_status", "FAILED")
-	} else {
-		store.AppRepository().SetAppField(app.Name, "install_status", "COMPLETE")
+	for _, i := range updateList {
+		changes = append(changes, entities.QueuedChange{
+			Type:        "UPDATE",
+			TargetApp:   app.Name,
+			Release:     i,
+			LastChecked: time.Now(),
+			ID:          uuid.New().String(),
+		})
 	}
 
-	if len(installs) != 0 {
-		if err := store.InstallRepository().InsertBatch(installs); err != nil {
-			store.AppRepository().SetAppError(app.Name, "failed to store installs in database")
-			return
-		}
+	for _, v := range installMap {
+		changes = append(changes, entities.QueuedChange{
+			Type:        "INSTALL",
+			TargetApp:   app.Name,
+			Release:     *v,
+			LastChecked: time.Now(),
+			ID:          uuid.New().String(),
+		})
 	}
-	store.AppRepository().SetAppError(app.Name, "")
+	store.QueuedChangeRepository().InsertBatch(changes)
 }
 
 func ListApps(c *gin.Context, name string, limit, offest int) *api.PaginationResponse[entities.App] {
@@ -119,8 +124,8 @@ func ListApps(c *gin.Context, name string, limit, offest int) *api.PaginationRes
 			Total: 0,
 		}
 	} else {
-		if count, err := store.ProductRepository().CountAll(); err != nil {
-			errors.NewInternal("failed to count products", err).Abort(c)
+		if count, err := store.AppRepository().CountAll(); err != nil {
+			errors.NewInternal("failed to count apps", err).Abort(c)
 			return nil
 		} else {
 			return &api.PaginationResponse[entities.App]{
@@ -131,10 +136,44 @@ func ListApps(c *gin.Context, name string, limit, offest int) *api.PaginationRes
 	}
 }
 
-func GetAppByName(name string) entities.App {
+func GetAppByName(c *gin.Context, name string) entities.App {
 	if res, err := store.AppRepository().Query(true, "name = ?", name); err != nil {
-		panic(err)
+		errors.NewNotFound("app not found", err).Abort(c)
+		return entities.App{}
 	} else {
 		return res
+	}
+}
+
+func GetAppInstall(c *gin.Context, name, productName string) *entities.Install {
+	app := GetAppByName(c, name)
+	for _, i := range app.Installs {
+		if i.ProductName == productName {
+			return i
+		}
+	}
+	errors.NewNotFound("install for app not found", nil).Abort(c)
+	return nil
+}
+
+func GetAppInstallResources(c *gin.Context, name, productName string) api.ResourceList {
+	GetAppInstall(c, name, productName)
+	resPods := kubernetes.Pods(c, name).ListByInstanceLabel(productName)
+	resSvcs := kubernetes.Services(c, name).ListByInstanceLabel(productName)
+
+	podNames := []string{}
+	svcNames := []string{}
+
+	for _, i := range resPods {
+		podNames = append(podNames, i.Name)
+	}
+
+	for _, i := range resSvcs {
+		svcNames = append(svcNames, i.Name)
+	}
+
+	return api.ResourceList{
+		Pods:     podNames,
+		Services: svcNames,
 	}
 }

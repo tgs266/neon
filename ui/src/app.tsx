@@ -5,11 +5,12 @@ import { ProductSearch } from './views/ProductSearch';
 import './app.css'
 import { Product } from './views/Product';
 import { AppSearch } from './views/AppSearch';
-import { App } from './views/App';
 import { Page } from './layout/Page';
 import { createTheme } from '@mui/material/styles';
 import { green, lightBlue } from '@mui/material/colors';
 import { ThemeProvider } from "@mui/system";
+import { App } from './views/App/App';
+import { Install } from './views/Install/Install';
 
 function MainApp() {
 
@@ -39,6 +40,7 @@ function MainApp() {
 
                         <Route path="/apps" element={<AppSearch />} />
                         <Route path="/apps/:name" element={<App />} />
+                        <Route path="/apps/:name/installs/:productName" element={<Install />} />
                     </Routes>
                 </Page>
             </ThemeProvider>
