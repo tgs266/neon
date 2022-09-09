@@ -86,7 +86,7 @@ export function Page(props: { children: React.ReactNode, mode: string, setMode: 
                 </Toolbar>
             </AppBar>
             <div style={{ display: "flex", height: "calc(100% - 64px)" }}>
-                <animated.div style={{ height: "100%", width: "240px", ...style }}>
+                <animated.div style={{ height: "100%", width: "240px", ...style, flexShrink: 0 }}>
                     <Sidebar />
                 </animated.div>
                 <Box sx={{ flexGrow: 1, p: 1, height: "calc(100% - 16px)" }}>

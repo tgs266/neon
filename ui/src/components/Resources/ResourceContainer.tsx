@@ -24,7 +24,8 @@ export default function ResourceContainer(props: { resources?: ResourceList, app
             overflow: "auto",
             borderRight: "1px",
             borderRightStyle: "solid",
-            borderColor: "lightgray"
+            borderColor: "lightgray",
+            flexShrink: 0
         }}>
             <List disablePadding>
                 <ExpandableList primary="Pods">

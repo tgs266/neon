@@ -19,4 +19,7 @@ func Routes(r *gin.Engine) {
 	r.GET("/api/v1/apps/:name/installs/:productName", GetAppInstall)
 	r.GET("/api/v1/apps/:name/changes/stored", ListStoredChanges)
 	r.GET("/api/v1/apps/:name/changes/queued", ListQueuedChanges)
+
+	r.GET("/api/v1/kubernetes/pods/:namespace/:name", GetPod)
+	r.GET("/api/v1/kubernetes/pods/:namespace/:name/status", GetPodStatus)
 }
