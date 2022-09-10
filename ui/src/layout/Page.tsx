@@ -56,13 +56,13 @@ const DarkModeSwitch = styled(Switch)(({ theme }) => ({
     },
 }));
 
-export function Page(props: { children: React.ReactNode, mode: string, setMode: React.Dispatch<React.SetStateAction<"dark" | "light">> }) {
+export function Page(props: { color: string, children: React.ReactNode, mode: string, setMode: React.Dispatch<React.SetStateAction<"dark" | "light">> }) {
     const [open, setOpen] = useState(true)
     const style = useSpring({ marginLeft: open ? "0px" : "-240px" })
-    return <Paper style={{ height: '100%', width: "100%" }}>
+    return <Paper style={{ height: '100%', width: "100%" }} color={props.color} sx={{backgroundColor: props.color}}>
         <div style={{height: "100%"}}>
-            <AppBar position="static" enableColorOnDark>
-                <Toolbar>
+            <AppBar sx={{zIndex: 1000000}} position="sticky" enableColorOnDark>
+                <Toolbar sx={{zIndex: 1000000}}>
                     <IconButton
                         size="large"
                         edge="start"
@@ -89,7 +89,7 @@ export function Page(props: { children: React.ReactNode, mode: string, setMode: 
                 <animated.div style={{ height: "100%", width: "240px", ...style, flexShrink: 0 }}>
                     <Sidebar />
                 </animated.div>
-                <Box sx={{ flexGrow: 1, p: 1, height: "calc(100% - 16px)" }}>
+                <Box sx={{ flexGrow: 1, height: "calc(100%)", overflow: "auto"}} color="background.paper">
                     {props.children}
                 </Box>
             </div>

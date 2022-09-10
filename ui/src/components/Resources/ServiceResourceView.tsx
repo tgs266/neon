@@ -1,7 +1,7 @@
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import TitleCard from "../DetailsTitleCard";
-import { V1Pod } from "@kubernetes/client-node"
+import { V1Service } from "@kubernetes/client-node"
 import { KubernetesService } from "../../services/Kubernetes";
 import Statistic from "../Statistic";
 import { Chip, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material';
@@ -9,45 +9,45 @@ import PodContainerView from "./PodContainerView";
 
 
 
-export function PodResourceView(props: { namespace: string, podName: string }) {
+export function ServiceResourceView(props: { namespace: string, name: string }) {
 
-    const [pod, setPod] = useState<V1Pod>(null)
+    const [service, setService] = useState<V1Service>(null)
 
     useEffect(() => {
-        KubernetesService.getPod(props.namespace, props.podName).then(r => {
-            setPod(r.data)
+        KubernetesService.getService(props.namespace, props.name).then(r => {
+            setService(r.data)
         })
     }, [props])
 
 
-    const { podName, namespace } = props
+    const { name, namespace } = props
     return <Box sx={{ flexGrow: 1, overflow: "auto" }}>
-        <TitleCard sx={{mt: 1}} title={podName}>
+        <TitleCard sx={{mt: 0}} title={name}>
             <Box sx={{ mt: 1, display: "flex", alignItems: "flex-start", gap: 2, flexWrap: "wrap" }}>
-                <Statistic label="Created At" value={new Date(pod?.metadata.creationTimestamp).toLocaleString()} />
-                <Statistic label="Namespace" value={pod?.metadata?.namespace} />
-                <Statistic label="UID" value={pod?.metadata?.uid} />
+                <Statistic label="Created At" value={new Date(service?.metadata.creationTimestamp).toLocaleString()} />
+                <Statistic label="Namespace" value={service?.metadata?.namespace} />
+                <Statistic label="UID" value={service?.metadata?.uid} />
             </Box>
             <Box sx={{ mt: 1 }}>
-                {pod?.metadata?.labels && <Statistic label={"Labels"} value={
+                {service?.metadata?.labels && <Statistic label={"Labels"} value={
                     <div style={{ margin: "-4px" }}>
-                        {Object.keys(pod?.metadata.labels).map(k =>
-                            <Chip size="small" label={`${k}: ${pod?.metadata.labels[k]}`} sx={{ m: 0.5 }} />
+                        {Object.keys(service?.metadata.labels).map(k =>
+                            <Chip size="small" label={`${k}: ${service?.metadata.labels[k]}`} sx={{ m: 0.5 }} />
                         )}
                     </div>
                 } />}
             </Box>
             <Box sx={{ mt: 1 }}>
-                {pod?.metadata?.annotations && <Statistic label={"Annotations"} value={
+                {service?.metadata?.annotations && <Statistic label={"Annotations"} value={
                     <div style={{ margin: "-4px" }}>
-                        {Object.keys(pod?.metadata.annotations).map(k =>
-                            <Chip size="small" label={`${k}: ${pod?.metadata.annotations[k]}`} sx={{ m: 0.5 }} />
+                        {Object.keys(service?.metadata.annotations).map(k =>
+                            <Chip size="small" label={`${k}: ${service?.metadata.annotations[k]}`} sx={{ m: 0.5 }} />
                         )}
                     </div>
                 } />}
             </Box>
         </TitleCard>
-        <TitleCard title="Conditions">
+        {/* <TitleCard sx={{ mb: 1 }} title="Conditions">
             <div style={{ border: "1px solid rgba(224, 224, 224, 1)", borderRadius: "3px"}}>
             <Table sx={{ minWidth: 650 }}>
                 <TableHead>
@@ -83,6 +83,6 @@ export function PodResourceView(props: { namespace: string, podName: string }) {
             </div>
         </TitleCard>
         <Typography variant="h6" color="text.secondary" sx={{mb: 1, ml: 2}}>Containers</Typography>
-        {pod?.spec?.containers.map((_, i) => <PodContainerView idx={i} pod={pod} />)}
+        {pod?.spec?.containers.map((_, i) => <PodContainerView idx={i} pod={pod} />)} */}
     </Box>
 }

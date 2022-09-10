@@ -44,20 +44,18 @@ export function Install() {
         })
     }, [name])
 
-    return <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
+    return <div style={{display: "flex", flexDirection: "column", height: "calc(100%)"}}>
         <TitleCard title={<div style={{ display: "flex", alignItems: "center" }}>
             <div>{name}/{productName}</div>
-        </div>} sx={{ mb: 1, flexShrink: 0 }}>
+        </div>} sx={{ flexShrink: 0, zIndex: 100, mb: 0 }}>
             <Box sx={{ mt: 1, display: "flex", alignItems: "center", gap: 2 }}>
                 <Statistic label="Created At" value={new Date(install?.createdAt).toLocaleString()} />
                 <Statistic label="Updated At" value={new Date(install?.updatedAt).toLocaleString()} />
             </Box>
         </TitleCard>
 
-        <Card sx={{flexGrow: 1}}>
-            <Box sx={{ overflow: "hidden", height: "100%" }}>
-                <ResourceContainer appName={name} resources={resources} />
-            </Box>
-        </Card>
+        <Box sx={{ flexGrow: 1, height: "100%", overflowY: "auto" }}>
+            <ResourceContainer appName={name} resources={resources} />
+        </Box>
     </div>
 }

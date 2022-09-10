@@ -12,7 +12,7 @@ export default function Accordion(props: { children?: React.ReactNode, title: Re
         >
             <Typography>{title}</Typography>
         </AccordionSummary>
-        <AccordionDetails sx={{ m: 0, p: 0 }} style={{ margin: 0 }}>
+        <AccordionDetails sx={{ p: 0 }} style={{ margin: 0 }}>
             {children}
         </AccordionDetails>
     </Ac>

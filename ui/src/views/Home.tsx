@@ -19,7 +19,7 @@ export function Home() {
         })
     }, [])
 
-    return <Grid container spacing={2}>
+    return <Grid container>
         <Grid item xs={6}>
             <Card>
                 <CardContent>

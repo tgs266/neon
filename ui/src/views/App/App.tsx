@@ -57,7 +57,7 @@ export function App() {
     return <div>
         <TitleCard title={<div style={{ display: "flex", alignItems: "center" }}>
             {app?.name ? <div>{app.name}</div> : null}
-        </div>} sx={{ mb: 1 }}>
+        </div>}>
             <Box sx={{ mt: 1, display: "flex", alignItems: "center", gap: 2 }}>
                 <Statistic label="Created At" value={new Date(app?.createdAt).toLocaleString()} />
                 <Statistic label="Updated At" value={new Date(app?.updatedAt).toLocaleString()} />
@@ -65,7 +65,7 @@ export function App() {
         </TitleCard>
 
         <Box sx={{}}>
-            <Tabs value={parseInt(search.get("tab"))} onChange={handleChange} aria-label="basic tabs example">
+            <Tabs sx={{ml: 1}} value={parseInt(search.get("tab"))} onChange={handleChange} aria-label="basic tabs example">
                 <Tab label="Installs" {...a11yProps(0)} />
                 <Tab label="Changes" {...a11yProps(1)} />
                 <Tab label="Queued Changes" {...a11yProps(2)} />

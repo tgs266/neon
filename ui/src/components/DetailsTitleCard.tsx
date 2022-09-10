@@ -10,7 +10,7 @@ export interface TitleCardProps {
 
 
 export default function TitleCard(props: TitleCardProps) {
-    return <Card sx={{padding: 2, ...props.sx}}>
+    return <Card sx={{ padding: 2, ...props.sx }}>
             <Typography variant="h6" color="text.primary">
                 {props.title}
             </Typography>

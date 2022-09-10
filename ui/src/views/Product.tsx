@@ -29,19 +29,27 @@ export function Product() {
     return <div>
         <TitleCard title={<div style={{ display: "flex", alignItems: "center" }}>
             {product?.name ? <div>{product.name}</div> : null}
-        </div>} sx={{ mb: 1 }}>
+        </div>}>
             <Box sx={{ mt: 1, display: "flex", alignItems: "center", gap: 2 }}>
                 <Statistic label="Created At" value={new Date(product?.createdAt).toLocaleString()} />
                 <Statistic label="Updated At" value={new Date(product?.updatedAt).toLocaleString()} />
             </Box>
         </TitleCard>
-        <Card sx={{mb: 1}}>
+        <Card sx={{p: 0}}>
             <Accordion title="Releases" defaultExpanded>
                 <ReleasesTable product={product} />
             </Accordion>
         </Card>
-        <Card>
+        <Card sx={{p: 0}}>
             <Accordion title="Installs">
+                <InstallsTable product={product} />
+                <InstallsTable product={product} />
+                <InstallsTable product={product} />
+                <InstallsTable product={product} />
+                <InstallsTable product={product} />
+                <InstallsTable product={product} />
+                <InstallsTable product={product} />
+                <InstallsTable product={product} />
                 <InstallsTable product={product} />
             </Accordion>
         </Card>

@@ -15,7 +15,7 @@ const boxSx = {
 }
 
 export function Sidebar() {
-    return <List>
+    return <List disablePadding>
         <ListItem disablePadding>
             <ListItemButton component={Link} to="/">
                 <ListItemIcon>
