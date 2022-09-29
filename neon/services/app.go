@@ -21,12 +21,16 @@ func CreateApp(c *gin.Context, request api.CreateAppRequest) {
 		Repository:  request.Repository,
 		Credentials: request.CredentialName,
 	}
+	if item.Repository != "" {
+		err := git.FillRepository(c, request)
+		if err != nil {
+			errors.NewInternal("failed to get git repo", err).Abort(c)
+			return
+		}
+	}
 	if err := store.AppRepository().Insert(item); err != nil {
 		errors.NewInternal("failed to create app", err).Abort(c)
 		return
-	}
-	if item.Repository != "" {
-		git.FillRepository(c, request)
 	}
 	handleAppInstalls(request.Name, true)
 }
