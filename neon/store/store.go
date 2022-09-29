@@ -127,9 +127,10 @@ func PullProducts(productNames []string, releaseChannel int) ([]entities.Product
 	err := store.db.NewSelect().
 		Model(&items).
 		Where("name IN (?)", bun.In(productNames)).
-		Relation("Releases", func(sq *bun.SelectQuery) *bun.SelectQuery {
-			return sq.Where("release_channel >= (?)", releaseChannel).OrderExpr("string_to_array(\"r\".\"product_version\", '.')::int[] DESC")
-		}).
+		Relation("Releases").
+		// Relation("Releases", func(sq *bun.SelectQuery) *bun.SelectQuery {
+		// 	return sq.Where("release_channel >= (?)", releaseChannel).OrderExpr("string_to_array(\"r\".\"product_version\", '.')::int[] DESC")
+		// }).
 		Scan(context.TODO())
 	return items, err
 }
