@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -42,11 +43,13 @@ func AddProductToApp(c *gin.Context, name string, request api.AddProductRequest)
 	}
 	newProducts := append(app.Products, request.Name)
 	if err := store.AppRepository().AddProduct(name, newProducts); err != nil {
+		fmt.Println(err)
 		errors.NewInternal("failed to update app", err).Abort(c)
 		return
 	}
 	err = git.AddProduct(c, request.Name, app)
 	if err != nil {
+		fmt.Println(err)
 		errors.NewInternal("failed to update app", err).Abort(c)
 		return
 	}
