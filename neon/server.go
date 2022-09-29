@@ -2,6 +2,7 @@ package neon
 
 import (
 	"embed"
+	"fmt"
 	"io/fs"
 	"net/http"
 	"strings"
@@ -75,7 +76,10 @@ func Start(host, username, password, port string, useUi bool, reset bool, inClus
 		defer func() {
 			if r := recover(); r != nil {
 				if err, ok := r.(*errors.NeonError); ok {
+					fmt.Println(err.Cause())
 					ctx.JSON(err.ErrorCode().StatusCode, err.ToSerializableError())
+				} else {
+					fmt.Println(r)
 				}
 			}
 		}()
