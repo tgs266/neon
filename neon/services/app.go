@@ -17,10 +17,11 @@ import (
 
 func CreateApp(c *gin.Context, request api.CreateAppRequest) {
 	item := entities.App{
-		Name:        request.Name,
-		Products:    request.Products,
-		Repository:  request.Repository,
-		Credentials: request.CredentialName,
+		Name:           request.Name,
+		Products:       request.Products,
+		Repository:     request.Repository,
+		Credentials:    request.CredentialName,
+		ReleaseChannel: 0,
 	}
 	if item.Repository != "" {
 		err := git.FillRepository(c, request)

@@ -14,5 +14,6 @@ export interface App {
 export interface CreateAppRequest {
     name: string,
     credentialName: string,
-    repository: string
+    repository: string,
+    products: string[]
 }

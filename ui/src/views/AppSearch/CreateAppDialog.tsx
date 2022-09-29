@@ -39,7 +39,8 @@ export function CreateAppDialog(props: {
     const req: CreateAppRequest = {
       name,
       credentialName: selectedCredentials,
-      repository: repo
+      repository: repo,
+      products: []
     }
 
     AppService.create(req).then(r => {
