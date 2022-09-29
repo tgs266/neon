@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"time"
@@ -59,11 +58,7 @@ func RunUpdateChange(change *entities.QueuedChange, app entities.App) (*entities
 	release := change.Release
 	dir := os.Getenv("NEON_HOME")
 	pathToConfig := path.Join(dir, path.Base(app.Repository), "neon", release.ProductName, "overrides.yaml")
-	fmt.Println(pathToConfig)
-	stdout, stderr, err := installUpdateHelmChart(app.Name, release.ProductName, &release, pathToConfig)
-	fmt.Println(stdout)
-	fmt.Println(stderr)
-	fmt.Println(err)
+	_, stderr, err := installUpdateHelmChart(app.Name, release.ProductName, &release, pathToConfig)
 	if err != nil {
 		change.Details = stderr
 		return change, err
@@ -73,6 +68,7 @@ func RunUpdateChange(change *entities.QueuedChange, app entities.App) (*entities
 		AppName:        app.Name,
 		ProductName:    release.ProductName,
 		ReleaseVersion: release.ProductVersion,
+		Error:          stderr,
 	}
 
 	err = store.InstallRepository().Update(install)
