@@ -29,7 +29,9 @@ func CreateApp(c *gin.Context, request api.CreateAppRequest) {
 		errors.NewInternal("failed to create app", err).Panic()
 		return
 	}
-	handleAppInstalls(request.Name, true)
+	if len(item.Products) != 0 {
+		handleAppInstalls(request.Name, true)
+	}
 }
 
 func AddProductToApp(c *gin.Context, name string, request api.AddProductRequest) {
