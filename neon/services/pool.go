@@ -97,7 +97,7 @@ func RunInstallChange(change *entities.QueuedChange, app entities.App) (*entitie
 
 func RunJob() {
 	qc, err := GrabQueuedChange()
-	if err != nil {
+	if err != nil || qc.ID == "" {
 		return
 	}
 	fmt.Println(qc)
