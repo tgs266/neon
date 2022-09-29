@@ -75,15 +75,12 @@ func RunInstallChange(change *entities.QueuedChange, app entities.App) (*entitie
 	release := change.Release
 
 	stderr, err := installUpdateHelmChart(app.Name, release.ProductName, &release)
-	if err != nil {
-		change.Details = stderr
-		return change, err
-	}
 
 	install := entities.Install{
 		AppName:        app.Name,
 		ProductName:    release.ProductName,
 		ReleaseVersion: release.ProductVersion,
+		Error:          stderr,
 	}
 
 	err = store.InstallRepository().Insert(install)
