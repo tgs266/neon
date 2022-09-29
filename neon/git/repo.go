@@ -36,6 +36,8 @@ func cloneRepo(c *gin.Context, repo string, credentials entities.Credentials) {
 		Auth: auth,
 	}
 
+	fmt.Println(auth)
+
 	_, err := git.PlainClone(dir, false, options)
 	fmt.Println(err)
 }
