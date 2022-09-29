@@ -54,7 +54,7 @@ func (a AppRepository) Query(includeInstalls bool, query string, args ...interfa
 }
 
 func (a AppRepository) QueryForEdit(includeInstalls bool, query string, args ...interface{}) (*entities.App, error) {
-	var item *entities.App
+	var item entities.App
 	call := a.DB.NewSelect().
 		Model(&item).
 		Where(query, args...)
@@ -64,7 +64,7 @@ func (a AppRepository) QueryForEdit(includeInstalls bool, query string, args ...
 	}
 
 	err := call.Scan(context.TODO())
-	return item, err
+	return &item, err
 }
 
 func (a AppRepository) SetAppError(appName string, errString string) error {
