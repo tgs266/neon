@@ -162,6 +162,20 @@ func GetAppInstall(c *gin.Context, name, productName string) *entities.Install {
 	return nil
 }
 
+func GetAppInstallConfig(c *gin.Context, name, productName string) api.InstallConfig {
+	app := GetAppByName(c, name)
+
+	errors.NewNotFound("install for app not found", nil).Panic()
+	credentials, err := store.CredentialsRepository().GetByName(app.Credentials)
+	errors.NewNotFound("creds not found", err).Panic()
+
+	git.Pull(c, app.Repository, credentials)
+
+	return api.InstallConfig{
+		Data: git.ReadConfigForProduct(c, app, productName),
+	}
+}
+
 func GetAppInstallResources(c *gin.Context, name, productName string) api.ResourceList {
 	GetAppInstall(c, name, productName)
 	resPods := kubernetes.Pods(c, name).ListByInstanceLabel(productName)

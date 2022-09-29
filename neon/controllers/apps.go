@@ -45,6 +45,13 @@ func GetAppInstall(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
+func GetAppInstallConfig(c *gin.Context) {
+	name := c.Param("name")
+	productName := c.Param("productName")
+	resp := services.GetAppInstallConfig(c, name, productName)
+	c.JSON(http.StatusOK, resp)
+}
+
 func GetAppInstallResources(c *gin.Context) {
 	name := c.Param("name")
 	productName := c.Param("productName")

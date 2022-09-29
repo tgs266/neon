@@ -106,6 +106,20 @@ func Push(c *gin.Context, repo string, creds entities.Credentials) {
 	errors.Check(err).NewInternal("couldnt push to remote repository").Panic()
 }
 
+func Pull(c *gin.Context, repo string, creds entities.Credentials) {
+	dir := os.Getenv("NEON_HOME")
+	repoPath := path.Join(dir, path.Base(repo))
+	r, err := git.PlainOpen(repoPath)
+	errors.Check(err).NewInternal("couldnt open local repository").Panic()
+	w, err := r.Worktree()
+	errors.Check(err).NewInternal("couldnt get worktree").Panic()
+	err = w.Pull(&git.PullOptions{
+		RemoteName: "origin",
+		Auth:       creds.GetGitCreds(c),
+	})
+	errors.Check(err).NewInternal("couldnt pull repository").Panic()
+}
+
 func wipeAndAddFiles(c *gin.Context, req api.CreateAppRequest, creds entities.Credentials, repo *git.Repository) error {
 	dir := os.Getenv("NEON_HOME")
 	repoPath := path.Join(dir, path.Base(req.Repository))
@@ -179,4 +193,13 @@ func AddProduct(c *gin.Context, productName string, app entities.App) error {
 
 	Push(c, appData.Repository, credentials)
 	return nil
+}
+
+func ReadConfigForProduct(c *gin.Context, app entities.App, product string) string {
+	dir := os.Getenv("NEON_HOME")
+	path := path.Join(dir, path.Base(app.Repository), "neon", product, "overrides.yaml")
+
+	data, err := ioutil.ReadFile(path)
+	errors.Check(err).NewInternal("failed to read override file for repository").Panic()
+	return string(data)
 }

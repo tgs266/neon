@@ -31,6 +31,7 @@
         "@emotion/react": "^11.10.4",
         "@emotion/styled": "^11.10.4",
         "@kubernetes/client-node": "^0.17.0",
+        "@monaco-editor/react": "^4.4.6",
         "@mui/icons-material": "^5.10.3",
         "@mui/material": "^5.10.3",
         "@react-spring/web": "^9.5.2",
@@ -39,6 +40,7 @@
         "axios": "^0.27.2",
         "luxon": "^3.0.3",
         "moment": "^2.29.4",
+        "monaco-editor": "^0.34.0",
         "react-router-dom": "^6.3.0"
     }
 }
