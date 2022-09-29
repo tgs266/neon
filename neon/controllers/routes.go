@@ -13,7 +13,7 @@ func Routes(r *gin.Engine) {
 
 	r.GET("/api/v1/apps", ListApps)
 	r.GET("/api/v1/apps/:name", GetApp)
-	r.POST("/api/v1/apps", ApplyApp)
+	r.POST("/api/v1/apps", CreateApp)
 
 	r.GET("/api/v1/apps/:name/installs/:productName/resources", GetAppInstallResources)
 	r.GET("/api/v1/apps/:name/installs/:productName", GetAppInstall)

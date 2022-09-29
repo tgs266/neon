@@ -7,34 +7,31 @@ import (
 	"github.com/google/uuid"
 	"github.com/tgs266/neon/neon/api"
 	"github.com/tgs266/neon/neon/errors"
+	"github.com/tgs266/neon/neon/git"
 	"github.com/tgs266/neon/neon/kubernetes"
 	"github.com/tgs266/neon/neon/store"
 	"github.com/tgs266/neon/neon/store/entities"
 	"github.com/tgs266/neon/neon/store/repositories"
 )
 
-func ApplyApp(c *gin.Context, request api.ApplyAppRequest) {
-	count, _ := store.Count[entities.App]("name = ?", request.Name)
-	if count == 0 {
-		createApp(c, request)
-	} else {
-		updateApp(c, request)
-	}
-}
-
-func createApp(c *gin.Context, request api.ApplyAppRequest) {
+func CreateApp(c *gin.Context, request api.CreateAppRequest) {
 	item := entities.App{
-		Name:     request.Name,
-		Products: request.Products,
+		Name:        request.Name,
+		Products:    request.Products,
+		Repository:  request.Repository,
+		Credentials: request.CredentialName,
 	}
 	if err := store.AppRepository().Insert(item); err != nil {
 		errors.NewInternal("failed to create app", err).Abort(c)
 		return
 	}
+	if item.Repository != "" {
+		git.FillRepository(c, request)
+	}
 	handleAppInstalls(request.Name, true)
 }
 
-func updateApp(c *gin.Context, request api.ApplyAppRequest) {
+func UpdateApp(c *gin.Context, request api.ApplyAppRequest) {
 	item := entities.App{
 		Name:     request.Name,
 		Products: request.Products,

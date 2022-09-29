@@ -9,10 +9,10 @@ import (
 	"github.com/tgs266/neon/neon/services"
 )
 
-func ApplyApp(c *gin.Context) {
-	var req api.ApplyAppRequest
+func CreateApp(c *gin.Context) {
+	var req api.CreateAppRequest
 	c.BindJSON(&req)
-	services.ApplyApp(c, req)
+	services.CreateApp(c, req)
 	c.JSON(http.StatusOK, req)
 }
 

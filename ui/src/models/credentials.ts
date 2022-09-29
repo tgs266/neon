@@ -8,3 +8,9 @@ export interface CreateCredentialsRequest {
 export interface CreateCredentialsResponse {
     name: string,
 }
+
+export interface Credentials {
+    name: string,
+    basicAuth: boolean,
+    tokenAuth: boolean
+}

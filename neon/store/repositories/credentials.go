@@ -18,6 +18,16 @@ func (r CredentialsRepository) Insert(item entities.Credentials) error {
 	return err
 }
 
+func (r CredentialsRepository) GetByName(name string) (entities.Credentials, error) {
+	var item entities.Credentials
+	call := r.DB.NewSelect().
+		Model(&item).
+		Where("name = ?", name)
+
+	err := call.Scan(context.TODO())
+	return item, err
+}
+
 func (r CredentialsRepository) Query(query string, args ...interface{}) (entities.Credentials, error) {
 	var item entities.Credentials
 	call := r.DB.NewSelect().

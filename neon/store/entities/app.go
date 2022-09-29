@@ -21,4 +21,7 @@ type App struct {
 
 	Error         string `json:"error"`
 	InstallStatus string `json:"installStatus"`
+
+	Repository  string `json:"repository"`
+	Credentials string `json:"credentials"`
 }
