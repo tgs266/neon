@@ -10,3 +10,9 @@ export interface App {
     error: string,
     installStatus: string
 }
+
+export interface CreateAppRequest {
+    name: string,
+    credentialName: string,
+    repository: string
+}

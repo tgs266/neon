@@ -1,11 +1,15 @@
 import axios, { AxiosResponse } from "axios";
-import { App } from "../models/app";
+import { App, CreateAppRequest } from "../models/app";
 import { QueuedChange, StoredChange } from "../models/change";
 import { Install } from "../models/install";
 import { Pagination } from "../models/pagination";
 import { ResourceList } from "../models/resources";
 
 export class AppService {
+
+    static async create(req: CreateAppRequest): Promise<AxiosResponse<App>> {
+        return axios.post("http://localhost:5000/api/v1/apps", req)
+    }
 
     static async listApps(limit = 10, offset = 0, name = ""): Promise<AxiosResponse<Pagination<App>>> {
         return axios.get("http://localhost:5000/api/v1/apps", { params: { limit, offset, name } })
