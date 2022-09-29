@@ -89,7 +89,7 @@ export function Page(props: { color: string, children: React.ReactNode, mode: st
                 <animated.div style={{ height: "100%", width: "240px", ...style, flexShrink: 0 }}>
                     <Sidebar />
                 </animated.div>
-                <Box sx={{ flexGrow: 1, height: "calc(100%)", overflow: "auto"}} color="background.paper">
+                <Box sx={{ flexGrow: 1, height: "calc(100% - 8px)", overflow: "auto", padding: "8px", pb: "0"}} color="background.paper">
                     {props.children}
                 </Box>
             </div>

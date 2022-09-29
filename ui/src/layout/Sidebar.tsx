@@ -6,6 +6,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import HomeIcon from '@mui/icons-material/Home';
 import { Link } from "react-router-dom";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const boxSx = {
     backgroundColor: 'primary.main',
@@ -40,6 +41,15 @@ export function Sidebar() {
                     <InventoryIcon />
                 </ListItemIcon>
                 <ListItemText primary="Products" />
+            </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+            <ListItemButton component={Link} to="/settings">
+                <ListItemIcon>
+                    <SettingsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Settings" />
             </ListItemButton>
         </ListItem>
     </List>

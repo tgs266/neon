@@ -11,22 +11,13 @@ import { green, lightBlue, grey } from '@mui/material/colors';
 import { ThemeProvider } from "@mui/system";
 import { App } from './views/App/App';
 import { Install } from './views/Install/Install';
+import { Settings } from './views/Settings/Settings';
 
 function MainApp() {
 
     const [mode, setMode] = useState<'light' | 'dark'>('light')
 
     const theme = createTheme({
-        components: {
-            MuiCard: {
-                styleOverrides: {
-                    root: {
-                      padding: '0px',
-                      margin: '8px',
-                    },
-                }
-            },
-        },
         palette: {
             mode,
             primary: {
@@ -45,6 +36,7 @@ function MainApp() {
                 <Page color={grey[100]} mode={mode} setMode={setMode}>
                     <Routes>
                         <Route path="/" element={<Home />} />
+                        <Route path="/settings" element={<Settings />} />
                         <Route path="/products" element={<ProductSearch />} />
                         <Route path="/products/:name" element={<Product />} />
 
