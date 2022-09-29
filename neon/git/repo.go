@@ -3,6 +3,7 @@ package git
 import (
 	"fmt"
 	"os"
+	"path"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-git/go-git/v5"
@@ -18,6 +19,8 @@ import (
 func cloneRepo(c *gin.Context, repo string, credentials entities.Credentials) {
 
 	dir := os.Getenv("NEON_HOME")
+
+	repoPath := path.Base("repo")
 
 	var auth transport.AuthMethod
 	if credentials.UsingBasic() {
@@ -36,9 +39,7 @@ func cloneRepo(c *gin.Context, repo string, credentials entities.Credentials) {
 		Auth: auth,
 	}
 
-	fmt.Println(auth)
-
-	_, err := git.PlainClone(dir, false, options)
+	_, err := git.PlainClone(repoPath, false, options)
 	fmt.Println(err)
 }
 
