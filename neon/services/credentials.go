@@ -88,3 +88,21 @@ func AddCredentials(c *gin.Context, req api.AddCredentialsRequest) api.AddCreden
 		Name: e.Name,
 	}
 }
+
+func GetCredentials(c *gin.Context) []api.Credential {
+	creds, err := store.CredentialsRepository().GetAll()
+	if err != nil {
+		errors.NewInternal("could not retrieve credentials", err).Abort(c)
+		return nil
+	}
+
+	outCreds := []api.Credential{}
+	for _, c := range creds {
+		outCreds = append(outCreds, api.Credential{
+			Name:      c.Name,
+			BasicAuth: c.UsingBasic(),
+			TokenAuth: !c.UsingBasic(),
+		})
+	}
+	return outCreds
+}

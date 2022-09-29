@@ -20,6 +20,12 @@ type AddCredentialsResponse struct {
 	Name string `json:"name"`
 }
 
+type Credential struct {
+	Name      string `json:"name"`
+	BasicAuth bool   `json:"basicAuth"`
+	TokenAuth bool   `json:"tokenAuth"`
+}
+
 func (a AddCredentialsRequest) Validate(c *gin.Context) {
 	if a.Name == "" || strings.Contains(a.Name, " ") {
 		errors.NewBadRequest("name cannot be empty or contain spaces", nil).Abort(c)

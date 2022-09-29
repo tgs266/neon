@@ -9,8 +9,8 @@ import (
 )
 
 func ListCredentials(c *gin.Context) {
-	// resp := services.ListCredentials(c, app, limit, offset)
-	// c.JSON(http.StatusOK, resp)
+	resp := services.GetCredentials(c)
+	c.JSON(http.StatusOK, resp)
 }
 
 func AddCredentials(c *gin.Context) {

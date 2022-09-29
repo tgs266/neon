@@ -27,3 +27,13 @@ func (r CredentialsRepository) Query(query string, args ...interface{}) (entitie
 	err := call.Scan(context.TODO())
 	return item, err
 }
+
+func (r CredentialsRepository) GetAll() ([]entities.Credentials, error) {
+	var item []entities.Credentials
+	call := r.DB.NewSelect().
+		Model(&item).
+		Order("created_at ASC")
+
+	err := call.Scan(context.TODO())
+	return item, err
+}

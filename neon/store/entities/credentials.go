@@ -15,3 +15,10 @@ type Credentials struct {
 
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"createdAt"`
 }
+
+func (a Credentials) UsingBasic() bool {
+	if a.Username != "" && a.Password != "" {
+		return true
+	}
+	return false
+}
