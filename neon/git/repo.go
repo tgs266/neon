@@ -1,6 +1,7 @@
 package git
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -45,6 +46,7 @@ func WriteAppFile(app *api.CreateAppRequest) {
 func ReadAppFile(repo string) *api.CreateAppRequest {
 	dir := os.Getenv("NEON_HOME")
 	repoPath := path.Join(dir, path.Base(repo))
+	fmt.Println(path.Join(repoPath, "app.yaml"))
 	yfile, err := ioutil.ReadFile(path.Join(repoPath, "app.yaml"))
 	errors.Check(err).NewInternal("failed to read app.yaml for repository").Panic()
 
