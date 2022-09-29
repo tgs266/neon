@@ -14,7 +14,7 @@ type App struct {
 
 	// ID       string     `bun:",pk" json:"appId"`
 	Name     string     `bun:",pk" json:"name"`
-	Products []string   `json:"products,array"`
+	Products []string   `bun:",array" json:"products"`
 	Installs []*Install `bun:"rel:has-many,join:name=app_name" json:"installs,omitempty"`
 
 	ReleaseChannel int `json:"releaseChannel"`
