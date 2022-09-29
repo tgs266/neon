@@ -50,14 +50,12 @@ func AddProductToApp(c *gin.Context, name string, request api.AddProductRequest)
 		errors.NewInternal("failed to update git", err).Panic()
 		return
 	}
-	handleAppInstalls(request.Name)
+	handleAppInstalls(name)
 }
 
 func handleAppInstalls(appName string) {
 	app, _ := store.AppRepository().Query(true, "name = ?", appName)
-	fmt.Println(app)
 	products, err := store.PullProducts(app.Products, app.ReleaseChannel)
-	fmt.Println(products)
 	if err != nil {
 		store.AppRepository().SetAppError(app.Name, "failed to pull products for app")
 		return
