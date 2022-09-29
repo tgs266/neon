@@ -94,17 +94,15 @@ func CommitAll(repo string) error {
 	return err
 }
 
-func Push(c *gin.Context, repo string, creds entities.Credentials) error {
+func Push(c *gin.Context, repo string, creds entities.Credentials) {
 	dir := os.Getenv("NEON_HOME")
 	repoPath := path.Join(dir, path.Base(repo))
 	r, err := git.PlainOpen(repoPath)
-	if err != nil {
-		return err
-	}
+	errors.Check(err).NewInternal("couldnt open local repository").Panic()
 	err = r.Push(&git.PushOptions{
 		Auth: creds.GetGitCreds(c),
 	})
-	return err
+	errors.Check(err).NewInternal("couldnt push to remote repository").Panic()
 }
 
 func wipeAndAddFiles(c *gin.Context, req api.CreateAppRequest, creds entities.Credentials, repo *git.Repository) error {
@@ -177,5 +175,6 @@ func AddProduct(c *gin.Context, productName string, app entities.App) error {
 	err = CommitAll(appData.Repository)
 	errors.Check(err).NewInternal("failed to commit to repository").Panic()
 
-	return Push(c, appData.Repository, credentials)
+	Push(c, appData.Repository, credentials)
+	return nil
 }
