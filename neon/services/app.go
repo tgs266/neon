@@ -207,7 +207,7 @@ func UpdateInstallConfig(c *gin.Context, name, productName string, commit api.In
 
 	store.QueuedChangeRepository().Insert(entities.QueuedChange{
 		Release: entities.Release{
-			ProductName:    name,
+			ProductName:    productName,
 			ProductVersion: install.ReleaseVersion,
 		},
 		Type:        "UPDATE",
