@@ -70,7 +70,7 @@ func CreateOverride(repo string, productName string) {
 
 }
 
-func CommitAll(repo string) error {
+func CommitOverrides(repo string) error {
 	dir := os.Getenv("NEON_HOME")
 	repoPath := path.Join(dir, path.Base(repo))
 	r, err := git.PlainOpen(repoPath)
@@ -81,7 +81,7 @@ func CommitAll(repo string) error {
 	if err != nil {
 		return err
 	}
-	w.AddGlob("*")
+	w.AddGlob("neon/*")
 	commit, err := w.Commit("system update", &git.CommitOptions{
 		Author: &object.Signature{
 			Name: "Neon",
@@ -174,7 +174,7 @@ func AddProduct(c *gin.Context, productName string, app entities.App) error {
 	WriteAppFile(appData)
 	CreateOverride(app.Repository, productName)
 
-	err = CommitAll(appData.Repository)
+	err = CommitOverrides(appData.Repository)
 	errors.Check(err).NewInternal("failed to commit to repository").Panic()
 
 	Push(c, appData.Repository, credentials)
