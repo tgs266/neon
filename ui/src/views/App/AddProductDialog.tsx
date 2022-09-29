@@ -21,6 +21,7 @@ import { Product } from "../../models/product";
 import { ProductService } from "../../services/ProductService";
 
 export function AddProductDialog(props: {
+  appName: string;
   open: boolean;
   setOpen: (b: boolean) => void;
 }) {
@@ -34,7 +35,11 @@ export function AddProductDialog(props: {
         })
     }, [])
 
-    const save = () => {}
+    const save = () => {
+      AppService.addProduct(props.appName, selectedProduct).then(r => {
+        props.setOpen(false)
+      })
+    }
 
   return (
     <Dialog maxWidth="md" fullWidth open={props.open} onClose={props.setOpen}>

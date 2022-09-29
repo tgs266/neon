@@ -65,7 +65,7 @@ export function App() {
                 <Statistic label="Updated At" value={new Date(app?.updatedAt).toLocaleString()} />
             </Box>
             <Button onClick={() => setOpen(true)}>Add Product</Button>
-            <AddProductDialog open={open} setOpen={setOpen} />
+            <AddProductDialog appName={app.name} open={open} setOpen={setOpen} />
         </TitleCard>
 
         <Box sx={{}}>

@@ -11,6 +11,10 @@ export class AppService {
         return axios.post("http://localhost:5000/api/v1/apps", req)
     }
 
+    static async addProduct(appName: string, name: string): Promise<AxiosResponse<App>> {
+        return axios.post(`http://localhost:5000/api/v1/apps/${appName}/products`, { name })
+    }
+
     static async listApps(limit = 10, offset = 0, name = ""): Promise<AxiosResponse<Pagination<App>>> {
         return axios.get("http://localhost:5000/api/v1/apps", { params: { limit, offset, name } })
     }
