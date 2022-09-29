@@ -165,7 +165,7 @@ func GetAppInstall(c *gin.Context, name, productName string) *entities.Install {
 func GetAppInstallConfig(c *gin.Context, name, productName string) api.InstallConfig {
 	app := GetAppByName(c, name)
 	credentials, err := store.CredentialsRepository().GetByName(app.Credentials)
-	errors.NewNotFound("creds not found", err).Panic()
+	errors.Check(err).NewNotFound("creds not found").Panic()
 
 	git.Pull(c, app.Repository, credentials)
 
