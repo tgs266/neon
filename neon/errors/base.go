@@ -21,7 +21,7 @@ type NeonError struct {
 	ignore     bool
 }
 
-var EMPTY_ERROR = NeonError{
+var EMPTY_ERROR = &NeonError{
 	ignore: true,
 }
 

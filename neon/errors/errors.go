@@ -30,22 +30,22 @@ func Check(err error) *ErrorChecker {
 }
 
 func (e *ErrorChecker) NewNotFound(message string, parameters ...map[string]any) *NeonError {
-	if e.err != nil {
-		return &EMPTY_ERROR
+	if e.err == nil {
+		return EMPTY_ERROR
 	}
 	return NewNotFound(message, e.err, parameters...)
 }
 
 func (e *ErrorChecker) NewInternal(message string, parameters ...map[string]any) *NeonError {
-	if e.err != nil {
-		return &EMPTY_ERROR
+	if e.err == nil {
+		return EMPTY_ERROR
 	}
 	return NewInternal(message, e.err, parameters...)
 }
 
 func (e *ErrorChecker) NewBadRequest(message string, parameters ...map[string]any) *NeonError {
-	if e.err != nil {
-		return &EMPTY_ERROR
+	if e.err == nil {
+		return EMPTY_ERROR
 	}
 	return NewBadRequest(message, e.err, parameters...)
 }
