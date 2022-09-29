@@ -20,7 +20,7 @@ func cloneRepo(c *gin.Context, repo string, credentials entities.Credentials) {
 
 	dir := os.Getenv("NEON_HOME")
 
-	repoPath := path.Base("repo")
+	repoPath := path.Join(dir, path.Base(repo))
 
 	var auth transport.AuthMethod
 	if credentials.UsingBasic() {
