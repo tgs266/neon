@@ -78,8 +78,8 @@ func Start(host, username, password, port string, useUi bool, reset bool, inClus
 					ctx.JSON(err.ErrorCode().StatusCode, err.ToSerializableError())
 				}
 			}
-			ctx.Next()
 		}()
+		ctx.Next()
 	})
 	controllers.Routes(r)
 	services.InitPool(2)
