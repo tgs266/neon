@@ -6,6 +6,7 @@ import (
 
 	"github.com/tgs266/neon/neon/store/entities"
 	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/pgdialect"
 )
 
 type AppRepository struct {
@@ -58,7 +59,7 @@ func (a AppRepository) AddProduct(appName string, newProducts []string) error {
 	call := a.DB.NewUpdate().
 		Model(&item).
 		Where("name = ?", appName).
-		Set("products = ?", newProducts)
+		Set("products = ?", pgdialect.Array(newProducts))
 
 	_, err := call.Exec(context.TODO())
 	return err
