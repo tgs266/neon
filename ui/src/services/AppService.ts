@@ -31,6 +31,10 @@ export class AppService {
         return axios.get(`http://localhost:5000/api/v1/apps/${name}/installs/${productName}/resources`)
     }
 
+    static async getInstallConfig(name = "", productName = ""): Promise<AxiosResponse<{data: string}>> {
+        return axios.get(`http://localhost:5000/api/v1/apps/${name}/installs/${productName}/config`)
+    }
+
     static async getStoredChanges(name = "", limit = 10, offset = 0): Promise<AxiosResponse<Pagination<StoredChange>>> {
         return axios.get(`http://localhost:5000/api/v1/apps/${name}/changes/stored`, { params: { limit, offset } })
     }

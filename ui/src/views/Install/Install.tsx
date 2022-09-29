@@ -22,6 +22,7 @@ function a11yProps(index: number) {
 }
 
 export function Install() {
+  const [code, setCode] = useState("# config here");
   const [install, setInstall] = useState<Install>(null);
   const [resources, setResources] = useState<ResourceList>(null);
   const { name, productName } = useParams();
@@ -33,6 +34,9 @@ export function Install() {
     });
     AppService.getInstallResources(name, productName).then((r) => {
       setResources(r.data);
+    });
+    AppService.getInstallConfig(name, productName).then((r) => {
+      setCode(r.data.data);
     });
   }, [name]);
 
@@ -113,7 +117,7 @@ export function Install() {
             </IconButton>
             </div>
             <div style={{marginTop: "8px", height: "calc(100% - 8px)", width: "100%"}}>
-            <ConfigEditor />
+                <ConfigEditor code={code} />
             </div>
           </Card>
         </>
