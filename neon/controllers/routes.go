@@ -15,6 +15,8 @@ func Routes(r *gin.Engine) {
 	r.GET("/api/v1/apps/:name", GetApp)
 	r.POST("/api/v1/apps", CreateApp)
 
+	r.POST("/api/v1/apps/:name/products", AddProductToApp)
+
 	r.GET("/api/v1/apps/:name/installs/:productName/resources", GetAppInstallResources)
 	r.GET("/api/v1/apps/:name/installs/:productName", GetAppInstall)
 	r.GET("/api/v1/apps/:name/changes/stored", ListStoredChanges)

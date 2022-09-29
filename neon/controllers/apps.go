@@ -16,6 +16,14 @@ func CreateApp(c *gin.Context) {
 	c.JSON(http.StatusOK, req)
 }
 
+func AddProductToApp(c *gin.Context) {
+	var req api.AddProductRequest
+	name := c.Param("name")
+	c.BindJSON(&req)
+	services.AddProductToApp(c, name, req)
+	c.JSON(http.StatusOK, req)
+}
+
 func ListApps(c *gin.Context) {
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "0"))
 	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "0"))

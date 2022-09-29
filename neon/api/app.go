@@ -12,3 +12,7 @@ type CreateAppRequest struct {
 	Repository     string   `json:"repository" yaml:"repository"`
 	CredentialName string   `json:"credentialName" yaml:"credentialName"`
 }
+
+type AddProductRequest struct {
+	Name string `json:"name"`
+}

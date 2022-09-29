@@ -17,6 +17,7 @@ import ChangesTable from '../../components/Tables/StoredChangesTable';
 import { QueuedChange, StoredChange } from '../../models/change';
 import QueuedChangesTable from '../../components/Tables/QueuedChangesTable';
 import StoredChangesTable from '../../components/Tables/StoredChangesTable';
+import { AddProductDialog } from './AddProductDialog';
 
 function a11yProps(index: number) {
     return {
@@ -27,6 +28,7 @@ function a11yProps(index: number) {
 
 export function App() {
 
+    const [open, setOpen] = useState(false)
     const [app, setApp] = useState<App>(null)
     const [storedChanges, setStoredChanges] = useState<StoredChange[]>([])
     const [queuedChanges, setQueuedChanges] = useState<QueuedChange[]>([])
@@ -62,6 +64,8 @@ export function App() {
                 <Statistic label="Created At" value={new Date(app?.createdAt).toLocaleString()} />
                 <Statistic label="Updated At" value={new Date(app?.updatedAt).toLocaleString()} />
             </Box>
+            <Button onClick={() => setOpen(true)}>Add Product</Button>
+            <AddProductDialog open={open} setOpen={setOpen} />
         </TitleCard>
 
         <Box sx={{}}>
