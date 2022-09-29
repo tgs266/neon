@@ -7,6 +7,7 @@ import (
 
 	"github.com/tgs266/neon/neon/store/entities"
 	"github.com/tgs266/neon/neon/store/repositories"
+	"github.com/tgs266/neon/neon/utils"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
@@ -57,8 +58,11 @@ func CreateStore(host string, username string, password string, reset bool) {
 			panic(err)
 		}
 		db.NewInsert().Model(&RELEASE_CHANNELS).Exec(context.TODO())
-	}
 
+		utils.WriteKey()
+	}
+	// just make sure we can read the key - this will panic
+	utils.ReadKey()
 }
 
 func IsConnected() bool {

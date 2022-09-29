@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid';
 import { Button, Card, CardActions, CardContent, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
-import { ProductService } from '../services/ProductService';
-import { AppService } from '../services/AppService';
-import { Product } from '../models/product';
+import { ProductService } from '../../services/ProductService';
+import { AppService } from '../../services/AppService';
+import { Product } from '../../models/product';
 import { Link } from 'react-router-dom';
-import { App } from '../models/app';
+import { App } from '../../models/app';
+import AddIcon from '@mui/icons-material/Add';
+import Fab from '@mui/material/Fab';
+import { CreateAppDialog } from './CreateAppDialog';
 
 export function AppSearch() {
 
     const [name, setName] = useState<string>("")
     const [apps, setApps] = useState<App[]>([])
+    const [open, setOpen] = useState(false)
 
     useEffect(() => {
         AppService.listApps(10, 0, name).then(r => {
@@ -19,7 +23,7 @@ export function AppSearch() {
     }, [name])
 
     return <div>
-        <Card sx={{ p: 1 }}>
+        <Card sx={{ p: 1, display: "flex", alignItems: "center" }}>
             <TextField
                 id="outlined-basic"
                 label="Name"
@@ -28,6 +32,9 @@ export function AppSearch() {
                 value={name}
                 fullWidth
             />
+            <Fab sx={{ml: 1}} color="primary" aria-label="add" onClick={() => setOpen(true)}>
+                <AddIcon />
+            </Fab>
         </Card>
 
         <Card>
@@ -53,5 +60,6 @@ export function AppSearch() {
                 </TableBody>
             </Table>
         </Card>
+        <CreateAppDialog open={open} setOpen={setOpen} />
     </div>
 }

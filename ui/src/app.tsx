@@ -4,7 +4,7 @@ import { Home } from './views/Home';
 import { ProductSearch } from './views/ProductSearch';
 import './app.css'
 import { Product } from './views/Product';
-import { AppSearch } from './views/AppSearch';
+import { AppSearch } from './views/AppSearch/AppSearch';
 import { Page } from './layout/Page';
 import { createTheme } from '@mui/material/styles';
 import { green, lightBlue, grey } from '@mui/material/colors';
@@ -30,10 +30,10 @@ function MainApp() {
         palette: {
             mode,
             primary: {
-                main: green.A400,
+                main: "#2196F3",
             },
             secondary: {
-                main: lightBlue[300],
+                main: "#fdd73d",
             },
         },
     });

@@ -61,8 +61,8 @@ export function Page(props: { color: string, children: React.ReactNode, mode: st
     const style = useSpring({ marginLeft: open ? "0px" : "-240px" })
     return <Paper style={{ height: '100%', width: "100%" }} color={props.color} sx={{backgroundColor: props.color}}>
         <div style={{height: "100%"}}>
-            <AppBar sx={{zIndex: 1000000}} position="sticky" enableColorOnDark>
-                <Toolbar sx={{zIndex: 1000000}}>
+            <AppBar sx={{zIndex: 1000}} position="sticky" enableColorOnDark>
+                <Toolbar sx={{zIndex: 1000}}>
                     <IconButton
                         size="large"
                         edge="start"
