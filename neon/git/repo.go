@@ -117,7 +117,9 @@ func Pull(c *gin.Context, repo string, creds entities.Credentials) {
 		RemoteName: "origin",
 		Auth:       creds.GetGitCreds(c),
 	})
-	errors.Check(err).NewInternal("couldnt pull repository").Panic()
+	if err != git.NoErrAlreadyUpToDate {
+		errors.Check(err).NewInternal("couldnt pull repository").Panic()
+	}
 }
 
 func wipeAndAddFiles(c *gin.Context, req api.CreateAppRequest, creds entities.Credentials, repo *git.Repository) error {
