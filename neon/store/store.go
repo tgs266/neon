@@ -57,6 +57,9 @@ func CreateStore(host string, username string, password string, reset bool) {
 		if err := db.ResetModel(context.TODO(), (*entities.StoredChange)(nil)); err != nil {
 			panic(err)
 		}
+		if err := db.ResetModel(context.TODO(), (*entities.Credentials)(nil)); err != nil {
+			panic(err)
+		}
 		db.NewInsert().Model(&RELEASE_CHANNELS).Exec(context.TODO())
 
 		utils.WriteKey()
