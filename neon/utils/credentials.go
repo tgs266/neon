@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -11,8 +12,8 @@ import (
 func GenerateNewKey() string {
 	key := make([]byte, 32)
 
-	k, _ := rand.Read(key)
-	return string(k)
+	rand.Read(key)
+	return base64.StdEncoding.EncodeToString(key)
 }
 
 func WriteKey() error {
