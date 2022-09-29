@@ -48,6 +48,7 @@ func ReadAppFile(repo string) *api.CreateAppRequest {
 	repoPath := path.Join(dir, path.Base(repo))
 	fmt.Println(path.Join(repoPath, "app.yaml"))
 	yfile, err := ioutil.ReadFile(path.Join(repoPath, "app.yaml"))
+	fmt.Println(err)
 	errors.Check(err).NewInternal("failed to read app.yaml for repository").Panic()
 
 	var data *api.CreateAppRequest
