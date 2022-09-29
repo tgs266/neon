@@ -59,10 +59,10 @@ func RunUpdateChange(change *entities.QueuedChange, app entities.App) (*entities
 	dir := os.Getenv("NEON_HOME")
 	pathToConfig := path.Join(dir, path.Base(app.Repository), "neon", release.ProductName, "overrides.yaml")
 	_, stderr, err := installUpdateHelmChart(app.Name, release.ProductName, &release, pathToConfig)
-	if err != nil {
-		change.Details = stderr
-		return change, err
-	}
+	// if err != nil {
+	// 	change.Details = stderr
+	// 	return change, err
+	// }
 
 	install := entities.Install{
 		AppName:        app.Name,
