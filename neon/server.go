@@ -51,7 +51,7 @@ func EmbedFolder(fsEmbed embed.FS, targetPath string, index bool) static.ServeFi
 func Start(host, username, password, port string, useUi bool, reset bool, inCluster bool, kubePath string) {
 	store.CreateStore(host, username, password, reset)
 	kubernetes.InitKubernetes(inCluster, kubePath)
-	r := gin.Default()
+	r := gin.New()
 	r.Use(cors.Default())
 	r.GET("/api/v1/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
