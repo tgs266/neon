@@ -42,11 +42,12 @@ func AddProductToApp(c *gin.Context, name string, request api.AddProductRequest)
 		errors.NewNotFound("app not found", err).Abort(c)
 	}
 	app.Products = append(app.Products, request.Name)
+	fmt.Println(app)
 	if err := store.AppRepository().Update(app); err != nil {
+		fmt.Println(err)
 		errors.NewInternal("failed to update app", err).Abort(c)
 		return
 	}
-	fmt.Println(app)
 	err = git.AddProduct(c, request.Name, app)
 	if err != nil {
 		errors.NewInternal("failed to update app", err).Abort(c)
