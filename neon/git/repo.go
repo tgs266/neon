@@ -34,8 +34,6 @@ func wipeAndAddFiles(c *gin.Context, req api.CreateAppRequest, creds entities.Cr
 	dir := os.Getenv("NEON_HOME")
 	repoPath := path.Join(dir, path.Base(req.Repository))
 
-	os.RemoveAll(repoPath)
-
 	yamlData, err := yaml.Marshal(&req)
 
 	if err != nil {
