@@ -6,3 +6,8 @@ export interface Install {
     releaseVersion: string,
     error: string
 }
+
+export interface InstallCommit {
+    data: string,
+    message: string
+}

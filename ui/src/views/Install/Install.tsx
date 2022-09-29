@@ -13,6 +13,8 @@ import ResourceContainer from "../../components/Resources/ResourceContainer";
 import ConfigEditor from "../../components/Editor/ConfigEditor";
 import CodeIcon from "@mui/icons-material/Code";
 import DifferenceIcon from "@mui/icons-material/Difference";
+import SaveIcon from '@mui/icons-material/Save';
+import { CommitDialog } from "./CommitDialog";
 
 function a11yProps(index: number) {
   return {
@@ -22,11 +24,13 @@ function a11yProps(index: number) {
 }
 
 export function Install() {
+  const [originalCode, setOriginalCode] = useState("# config here");
   const [code, setCode] = useState("# config here");
   const [install, setInstall] = useState<Install>(null);
   const [resources, setResources] = useState<ResourceList>(null);
   const { name, productName } = useParams();
   const [search, setSearch] = useSearchParams();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     AppService.getInstall(name, productName).then((r) => {
@@ -37,6 +41,7 @@ export function Install() {
     });
     AppService.getInstallConfig(name, productName).then((r) => {
       setCode(r.data.data);
+      setOriginalCode(r.data.data);
     });
   }, [name]);
 
@@ -109,15 +114,16 @@ export function Install() {
             sx={{ mt: 1, flexGrow: 1, maxHeight: "500px", overflowY: "auto", display: "flex", alignItems: "flex-start" }}
           >
             <div style={{display: "flex", flexDirection: "column", gap: "4px", marginLeft: "8px"}}>
-            <IconButton color="primary">
-              <CodeIcon />
-            </IconButton>
             <IconButton color="secondary">
               <DifferenceIcon />
             </IconButton>
+            <IconButton color="primary" onClick={() => setOpen(true)} disabled={originalCode === code}>
+              <SaveIcon />
+            </IconButton>
             </div>
             <div style={{marginTop: "8px", height: "calc(100% - 8px)", width: "100%"}}>
-                <ConfigEditor code={code} />
+                <ConfigEditor code={code} onChange={setCode} />
+                <CommitDialog open={open} setOpen={setOpen} data={code} appName={name} productName={productName} />
             </div>
           </Card>
         </>

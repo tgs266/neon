@@ -195,3 +195,13 @@ func GetAppInstallResources(c *gin.Context, name, productName string) api.Resour
 		Services: svcNames,
 	}
 }
+
+func UpdateInstallConfig(c *gin.Context, name, productName string, commit api.InstallConfigCommit) api.InstallConfigCommit {
+	app := GetAppByName(c, name)
+	credentials, err := store.CredentialsRepository().GetByName(app.Credentials)
+	errors.Check(err).NewNotFound("creds not found").Panic()
+
+	git.WriteUpdate(c, credentials, app.Repository, productName, commit)
+
+	return commit
+}

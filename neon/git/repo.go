@@ -122,6 +122,16 @@ func Pull(c *gin.Context, repo string, creds entities.Credentials) {
 	}
 }
 
+func WriteUpdate(c *gin.Context, creds entities.Credentials, repo string, productName string, commit api.InstallConfigCommit) {
+	dir := os.Getenv("NEON_HOME")
+	repoPath := path.Join(dir, path.Base(repo))
+	d1 := []byte(commit.Data)
+	err := os.WriteFile(path.Join(repoPath, "neon", productName, "overrides.yaml"), d1, 0644)
+	errors.Check(err).NewInternal("failed to write file").Panic()
+	CommitOverrides(repo)
+	Push(c, repo, creds)
+}
+
 func wipeAndAddFiles(c *gin.Context, req api.CreateAppRequest, creds entities.Credentials, repo *git.Repository) error {
 	dir := os.Getenv("NEON_HOME")
 	repoPath := path.Join(dir, path.Base(req.Repository))

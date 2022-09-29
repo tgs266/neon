@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { App, CreateAppRequest } from "../models/app";
 import { QueuedChange, StoredChange } from "../models/change";
-import { Install } from "../models/install";
+import { Install, InstallCommit } from "../models/install";
 import { Pagination } from "../models/pagination";
 import { ResourceList } from "../models/resources";
 
@@ -33,6 +33,10 @@ export class AppService {
 
     static async getInstallConfig(name = "", productName = ""): Promise<AxiosResponse<{data: string}>> {
         return axios.get(`http://localhost:5000/api/v1/apps/${name}/installs/${productName}/config`)
+    }
+
+    static async updateInstallConfig(name = "", productName = "", data: InstallCommit): Promise<AxiosResponse<{data: string}>> {
+        return axios.put(`http://localhost:5000/api/v1/apps/${name}/installs/${productName}/config`, data)
     }
 
     static async getStoredChanges(name = "", limit = 10, offset = 0): Promise<AxiosResponse<Pagination<StoredChange>>> {
