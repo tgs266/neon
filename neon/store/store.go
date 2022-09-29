@@ -132,6 +132,7 @@ func PullProducts(productNames []string, releaseChannel int) ([]entities.Product
 		// 	return sq.Where("release_channel >= (?)", releaseChannel).OrderExpr("string_to_array(\"r\".\"product_version\", '.')::int[] DESC")
 		// }).
 		Scan(context.TODO())
+	fmt.Println(err)
 	return items, err
 }
 
