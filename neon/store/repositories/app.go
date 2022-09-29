@@ -53,6 +53,20 @@ func (a AppRepository) Query(includeInstalls bool, query string, args ...interfa
 	return item, err
 }
 
+func (a AppRepository) QueryForEdit(includeInstalls bool, query string, args ...interface{}) (*entities.App, error) {
+	var item *entities.App
+	call := a.DB.NewSelect().
+		Model(&item).
+		Where(query, args...)
+
+	if includeInstalls {
+		call = call.Relation("Installs")
+	}
+
+	err := call.Scan(context.TODO())
+	return item, err
+}
+
 func (a AppRepository) SetAppError(appName string, errString string) error {
 	var item entities.App
 	_, err := a.DB.NewUpdate().

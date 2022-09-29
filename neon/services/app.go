@@ -37,18 +37,18 @@ func CreateApp(c *gin.Context, request api.CreateAppRequest) {
 }
 
 func AddProductToApp(c *gin.Context, name string, request api.AddProductRequest) {
-	app, err := store.AppRepository().Query(true, "name = ?", name)
+	app, err := store.AppRepository().QueryForEdit(true, "name = ?", name)
 	if err != nil {
 		errors.NewNotFound("app not found", err).Abort(c)
 	}
 	app.Products = append(app.Products, request.Name)
 	fmt.Println(app)
-	if err := store.AppRepository().Update(app); err != nil {
+	if err := store.AppRepository().Update(*app); err != nil {
 		fmt.Println(err)
 		errors.NewInternal("failed to update app", err).Abort(c)
 		return
 	}
-	err = git.AddProduct(c, request.Name, app)
+	err = git.AddProduct(c, request.Name, *app)
 	if err != nil {
 		errors.NewInternal("failed to update app", err).Abort(c)
 		return
