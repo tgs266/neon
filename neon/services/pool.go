@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"time"
@@ -100,6 +101,7 @@ func RunJob() {
 		return
 	}
 	newQc, err := RunQueuedChange(&qc)
+	fmt.Println(err)
 	newQc.LastChecked = time.Now()
 	if err != nil {
 		store.QueuedChangeRepository().Update(*newQc)
