@@ -58,7 +58,7 @@ func ReadAppFile(repo string) *api.CreateAppRequest {
 	return data
 }
 
-func CreateOverride(repo string, productName string) error {
+func CreateOverride(repo string, productName string) {
 	dir := os.Getenv("NEON_HOME")
 	repoPath := path.Join(dir, path.Base(repo))
 
@@ -66,7 +66,8 @@ func CreateOverride(repo string, productName string) error {
 
 	d1 := []byte("# add config overrides here")
 	err := os.WriteFile(path.Join(repoPath, "neon", productName, "overrides.yaml"), d1, 0644)
-	return err
+	errors.Check(err).NewInternal("could not create override file").Panic()
+
 }
 
 func CommitAll(repo string) error {
@@ -171,6 +172,7 @@ func AddProduct(c *gin.Context, productName string, app entities.App) error {
 
 	appData.Products = append(appData.Products, productName)
 	WriteAppFile(appData)
+	CreateOverride(app.Repository, productName)
 
 	err = CommitAll(appData.Repository)
 	errors.Check(err).NewInternal("failed to commit to repository").Panic()
