@@ -48,10 +48,11 @@ func AddProductToApp(c *gin.Context, name string, request api.AddProductRequest)
 		errors.NewInternal("failed to update app", err).Abort(c)
 		return
 	}
+	fmt.Println("YEP!")
 	err = git.AddProduct(c, request.Name, app)
 	if err != nil {
 		fmt.Println(err)
-		errors.NewInternal("failed to update app", err).Abort(c)
+		errors.NewInternal("failed to update git", err).Abort(c)
 		return
 	}
 	handleAppInstalls(request.Name, true)
