@@ -3,7 +3,6 @@ package utils
 import (
 	"crypto/rand"
 	"encoding/base64"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -22,13 +21,12 @@ func WriteKey() error {
 		panic("must set NEON_HOME env")
 	}
 	key := GenerateNewKey()
-	fmt.Println(key)
 	d1 := []byte(key)
 	err := os.WriteFile(path.Join(dir, "keys"), d1, 0644)
 	return err
 }
 
-func ReadKey() string {
+func ReadKey() []byte {
 	dir := os.Getenv("NEON_HOME")
 	if dir == "" {
 		panic("must set NEON_HOME env")
@@ -37,5 +35,9 @@ func ReadKey() string {
 	if err != nil {
 		panic("couldnt read keyfile: " + err.Error())
 	}
-	return string(data)
+	decoded, err := base64.StdEncoding.DecodeString(string(data))
+	if err != nil {
+		panic("couldnt read keyfile: " + err.Error())
+	}
+	return decoded
 }
