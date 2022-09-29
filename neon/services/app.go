@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -30,7 +31,7 @@ func CreateApp(c *gin.Context, request api.CreateAppRequest) {
 		return
 	}
 	if len(item.Products) != 0 {
-		handleAppInstalls(request.Name, true)
+		handleAppInstalls(request.Name)
 	}
 }
 
@@ -49,12 +50,12 @@ func AddProductToApp(c *gin.Context, name string, request api.AddProductRequest)
 		errors.NewInternal("failed to update git", err).Panic()
 		return
 	}
-	handleAppInstalls(request.Name, true)
+	handleAppInstalls(request.Name)
 }
 
-func handleAppInstalls(appName string, update bool) {
+func handleAppInstalls(appName string) {
 	app, _ := store.AppRepository().Query(true, "name = ?", appName)
-
+	fmt.Println(app)
 	products, err := store.PullProducts(app.Products, app.ReleaseChannel)
 	if err != nil {
 		store.AppRepository().SetAppError(app.Name, "failed to pull products for app")
@@ -66,9 +67,6 @@ func handleAppInstalls(appName string, update bool) {
 	}
 	currentInstalls := app.Installs
 
-	// store.AppRepository().SetAppField(app.Name, "install_status", "IN_PROGRESS")
-
-	// actually generate install here
 	installMap := resolveDependencies(products)
 	deleteList := []string{}
 	updateList := []entities.Release{}
@@ -76,6 +74,8 @@ func handleAppInstalls(appName string, update bool) {
 		store.AppRepository().SetAppError(app.Name, "failed to resolve dependencies")
 		return
 	}
+
+	fmt.Println(installMap)
 
 	for _, install := range currentInstalls {
 		if expectedInstall, exists := installMap[install.ProductName]; exists {
@@ -120,6 +120,7 @@ func handleAppInstalls(appName string, update bool) {
 			ID:          uuid.New().String(),
 		})
 	}
+	fmt.Println(changes)
 	store.QueuedChangeRepository().InsertBatch(changes)
 }
 
