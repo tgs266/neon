@@ -17,7 +17,7 @@ func ListStoredChanges(c *gin.Context, app string, limit, offest int) *api.Pagin
 		}
 	} else {
 		if count, err := store.StoredChangeRepository().CountAllForApp(app); err != nil {
-			errors.NewInternal("failed to count changes", err).Abort(c)
+			errors.NewInternal("failed to count changes", err).Panic()
 			return nil
 		} else {
 			return &api.PaginationResponse[entities.StoredChange]{
@@ -36,7 +36,7 @@ func ListQueuedChanges(c *gin.Context, app string, limit, offest int) *api.Pagin
 		}
 	} else {
 		if count, err := store.QueuedChangeRepository().CountAllForApp(app); err != nil {
-			errors.NewInternal("failed to count changes", err).Abort(c)
+			errors.NewInternal("failed to count changes", err).Panic()
 			return nil
 		} else {
 			return &api.PaginationResponse[entities.QueuedChange]{

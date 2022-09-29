@@ -18,6 +18,17 @@ type NeonError struct {
 	errorCode  ErrorCode
 	message    string
 	parameters map[string]any
+	ignore     bool
+}
+
+var EMPTY_ERROR = NeonError{
+	ignore: true,
+}
+
+func (s *NeonError) Panic() {
+	if !s.ignore {
+		panic(s)
+	}
 }
 
 func (s *NeonError) Error() string {

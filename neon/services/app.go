@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -24,14 +23,10 @@ func CreateApp(c *gin.Context, request api.CreateAppRequest) {
 		ReleaseChannel: 0,
 	}
 	if item.Repository != "" {
-		err := git.FillRepository(c, request)
-		if err != nil {
-			errors.NewInternal("failed to get git repo", err).Abort(c)
-			return
-		}
+		git.FillRepository(c, request)
 	}
 	if err := store.AppRepository().Insert(item); err != nil {
-		errors.NewInternal("failed to create app", err).Abort(c)
+		errors.NewInternal("failed to create app", err).Panic()
 		return
 	}
 	handleAppInstalls(request.Name, true)
@@ -40,19 +35,16 @@ func CreateApp(c *gin.Context, request api.CreateAppRequest) {
 func AddProductToApp(c *gin.Context, name string, request api.AddProductRequest) {
 	app, err := store.AppRepository().Query(true, "name = ?", name)
 	if err != nil {
-		errors.NewNotFound("app not found", err).Abort(c)
+		errors.NewNotFound("app not found", err).Panic()
 	}
 	newProducts := append(app.Products, request.Name)
 	if err := store.AppRepository().AddProduct(name, newProducts); err != nil {
-		fmt.Println(err)
-		errors.NewInternal("failed to update app", err).Abort(c)
+		errors.NewInternal("failed to update app", err).Panic()
 		return
 	}
-	fmt.Println("YEP!")
 	err = git.AddProduct(c, request.Name, app)
 	if err != nil {
-		fmt.Println(err)
-		errors.NewInternal("failed to update git", err).Abort(c)
+		errors.NewInternal("failed to update git", err).Panic()
 		return
 	}
 	handleAppInstalls(request.Name, true)
@@ -137,7 +129,7 @@ func ListApps(c *gin.Context, name string, limit, offest int) *api.PaginationRes
 		}
 	} else {
 		if count, err := store.AppRepository().CountAll(); err != nil {
-			errors.NewInternal("failed to count apps", err).Abort(c)
+			errors.NewInternal("failed to count apps", err).Panic()
 			return nil
 		} else {
 			return &api.PaginationResponse[entities.App]{
@@ -150,7 +142,7 @@ func ListApps(c *gin.Context, name string, limit, offest int) *api.PaginationRes
 
 func GetAppByName(c *gin.Context, name string) entities.App {
 	if res, err := store.AppRepository().Query(true, "name = ?", name); err != nil {
-		errors.NewNotFound("app not found", err).Abort(c)
+		errors.NewNotFound("app not found", err).Panic()
 		return entities.App{}
 	} else {
 		return res
@@ -164,7 +156,7 @@ func GetAppInstall(c *gin.Context, name, productName string) *entities.Install {
 			return i
 		}
 	}
-	errors.NewNotFound("install for app not found", nil).Abort(c)
+	errors.NewNotFound("install for app not found", nil).Panic()
 	return nil
 }
 

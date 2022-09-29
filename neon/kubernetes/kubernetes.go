@@ -64,7 +64,7 @@ func initOutOfCluster(kubePath string) {
 
 func Pods(c *gin.Context, namespace string) podRepo {
 	if cs == nil {
-		errors.NewInternal("kubernetes client not initialized", nil).Abort(c)
+		errors.NewInternal("kubernetes client not initialized", nil).Panic()
 	}
 	return podRepo{
 		namespace: namespace,
@@ -75,7 +75,7 @@ func Pods(c *gin.Context, namespace string) podRepo {
 
 func Services(c *gin.Context, namespace string) serviceRepo {
 	if cs == nil {
-		errors.NewInternal("kubernetes client not initialized", nil).Abort(c)
+		errors.NewInternal("kubernetes client not initialized", nil).Panic()
 	}
 	return serviceRepo{
 		namespace: namespace,

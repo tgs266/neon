@@ -22,7 +22,7 @@ func (r serviceRepo) ListByInstanceLabel(label string) []v1.Service {
 		LabelSelector: labels.Set(metav1.LabelSelector{MatchLabels: map[string]string{"app.kubernetes.io/instance": label}}.MatchLabels).String(),
 	})
 	if err != nil {
-		errors.NewNotFound("services not found", err).Abort(r.c)
+		errors.NewNotFound("services not found", err).Panic()
 	}
 	return res.Items
 }

@@ -24,7 +24,7 @@ func (r podRepo) ListByInstanceLabel(label string) []v1.Pod {
 		LabelSelector: labels.Set(metav1.LabelSelector{MatchLabels: map[string]string{"app.kubernetes.io/instance": label}}.MatchLabels).String(),
 	})
 	if err != nil {
-		errors.NewNotFound("pods not found", nil).Abort(r.c)
+		errors.NewNotFound("pods not found", nil).Panic()
 	}
 	return res.Items
 }
@@ -32,7 +32,7 @@ func (r podRepo) ListByInstanceLabel(label string) []v1.Pod {
 func (r podRepo) GetPod(name string) *v1.Pod {
 	res, err := r.cs.CoreV1().Pods(r.namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
-		errors.NewNotFound("pods not found", nil).Abort(r.c)
+		errors.NewNotFound("pods not found", nil).Panic()
 	}
 	return res
 }

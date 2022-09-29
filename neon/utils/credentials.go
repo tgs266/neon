@@ -52,14 +52,14 @@ func EncryptAES(c *gin.Context, key []byte, plaintext string) string {
 	block, err := aes.NewCipher(key)
 	plainText := []byte(plaintext)
 	if err != nil {
-		errors.NewInternal("failed to encrypt", err).Abort(c)
+		errors.NewInternal("failed to encrypt", err).Panic()
 		return ""
 	}
 	cipherText := make([]byte, aes.BlockSize+len(plainText))
 
 	iv := cipherText[:aes.BlockSize]
 	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
-		errors.NewInternal("failed to encrypt", err).Abort(c)
+		errors.NewInternal("failed to encrypt", err).Panic()
 		return ""
 	}
 
@@ -72,19 +72,19 @@ func DecryptAES(c *gin.Context, key []byte, secure string) string {
 	cipherText, err := base64.RawStdEncoding.DecodeString(secure)
 
 	if err != nil {
-		errors.NewInternal("failed to decrypt", err).Abort(c)
+		errors.NewInternal("failed to decrypt", err).Panic()
 		return ""
 	}
 
 	block, err := aes.NewCipher(key)
 
 	if err != nil {
-		errors.NewInternal("failed to decrypt", err).Abort(c)
+		errors.NewInternal("failed to decrypt", err).Panic()
 		return ""
 	}
 
 	if len(cipherText) < aes.BlockSize {
-		errors.NewInternal("failed to decrypt", err).Abort(c)
+		errors.NewInternal("failed to decrypt", err).Panic()
 		return ""
 	}
 

@@ -26,7 +26,7 @@ func AddCredentials(c *gin.Context, req api.AddCredentialsRequest) api.AddCreden
 		}
 	}
 	if err := store.CredentialsRepository().Insert(e); err != nil {
-		errors.NewInternal("failed to store credentials", err).Abort(c)
+		errors.NewInternal("failed to store credentials", err).Panic()
 		return api.AddCredentialsResponse{}
 	}
 	return api.AddCredentialsResponse{
@@ -37,7 +37,7 @@ func AddCredentials(c *gin.Context, req api.AddCredentialsRequest) api.AddCreden
 func GetCredentials(c *gin.Context) []api.Credential {
 	creds, err := store.CredentialsRepository().GetAll()
 	if err != nil {
-		errors.NewInternal("could not retrieve credentials", err).Abort(c)
+		errors.NewInternal("could not retrieve credentials", err).Panic()
 		return nil
 	}
 

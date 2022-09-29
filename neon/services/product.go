@@ -20,7 +20,7 @@ func CreateProduct(request api.CreateProductRequest) {
 
 func GetProductByName(c *gin.Context, name string) entities.Product {
 	if res, err := store.ProductRepository().Query(true, true, "name = ?", name); err != nil {
-		errors.NewNotFound("product not found", err).Abort(c)
+		errors.NewNotFound("product not found", err).Panic()
 		return entities.Product{}
 	} else {
 		return res
@@ -35,7 +35,7 @@ func ListProducts(c *gin.Context, name string, limit, offest int) *api.Paginatio
 		}
 	} else {
 		if count, err := store.ProductRepository().CountAll(); err != nil {
-			errors.NewInternal("failed to count products", err).Abort(c)
+			errors.NewInternal("failed to count products", err).Panic()
 			return nil
 		} else {
 			return &api.PaginationResponse[entities.Product]{

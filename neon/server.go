@@ -2,7 +2,6 @@ package neon
 
 import (
 	"embed"
-	"fmt"
 	"io/fs"
 	"net/http"
 	"strings"
@@ -80,9 +79,7 @@ func Start(host, username, password, port string, useUi bool, reset bool, inClus
 				}
 			}
 		}()
-		fmt.Println("stepping in")
 		ctx.Next()
-		fmt.Println("request done")
 	})
 	controllers.Routes(r)
 	services.InitPool(2)

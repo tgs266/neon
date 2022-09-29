@@ -16,7 +16,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func cloneRepo(c *gin.Context, repo string, credentials entities.Credentials) (*git.Repository, error) {
+func cloneRepo(c *gin.Context, repo string, credentials entities.Credentials) *git.Repository {
 
 	dir := os.Getenv("NEON_HOME")
 	repoPath := path.Join(dir, path.Base(repo))
@@ -27,38 +27,32 @@ func cloneRepo(c *gin.Context, repo string, credentials entities.Credentials) (*
 	}
 
 	r, err := git.PlainClone(repoPath, false, options)
-	return r, err
+	errors.Check(err).NewInternal("could not clone repository").Panic()
+	return r
 }
 
-func WriteAppFile(app *api.CreateAppRequest) error {
+func WriteAppFile(app *api.CreateAppRequest) {
 	dir := os.Getenv("NEON_HOME")
 	repoPath := path.Join(dir, path.Base(app.Repository))
 	yamlData, err := yaml.Marshal(&app)
-	if err != nil {
-		return err
-	}
+	errors.Check(err).NewInternal("could not marshal yaml").Panic()
+
 	fileName := path.Join(repoPath, "app.yaml")
 	err = ioutil.WriteFile(fileName, yamlData, 0644)
-	if err != nil {
-		return err
-	}
-	return nil
+	errors.Check(err).NewInternal("could not write app.yaml file for git repository").Panic()
 }
 
-func ReadAppFile(repo string) (*api.CreateAppRequest, error) {
+func ReadAppFile(repo string) *api.CreateAppRequest {
 	dir := os.Getenv("NEON_HOME")
 	repoPath := path.Join(dir, path.Base(repo))
 	yfile, err := ioutil.ReadFile(path.Join(repoPath, "app.yaml"))
+	errors.Check(err).NewInternal("failed to read app.yaml for repository").Panic()
 
-	if err != nil {
-		return nil, err
-	}
 	var data *api.CreateAppRequest
 	err2 := yaml.Unmarshal(yfile, &data)
-	if err2 != nil {
-		return nil, err2
-	}
-	return data, nil
+	errors.Check(err2).NewInternal("failed to unmarshal app.yaml").Panic()
+
+	return data
 }
 
 func CreateOverride(repo string, productName string) error {
@@ -158,19 +152,13 @@ func wipeAndAddFiles(c *gin.Context, req api.CreateAppRequest, creds entities.Cr
 
 }
 
-func FillRepository(c *gin.Context, req api.CreateAppRequest) error {
+func FillRepository(c *gin.Context, req api.CreateAppRequest) {
 	credentials, err := store.CredentialsRepository().GetByName(req.CredentialName)
-	if err != nil {
-		errors.NewNotFound("credentials not found", err).Abort(c)
-		return err
-	}
+	errors.Check(err).NewNotFound("credentials not found").Panic()
 
-	r, err := cloneRepo(c, req.Repository, credentials)
-	if err != nil {
-		return err
-	}
+	r := cloneRepo(c, req.Repository, credentials)
 
-	return wipeAndAddFiles(c, req, credentials, r)
+	wipeAndAddFiles(c, req, credentials, r)
 }
 
 func AddProduct(c *gin.Context, productName string, app entities.App) error {
@@ -178,18 +166,13 @@ func AddProduct(c *gin.Context, productName string, app entities.App) error {
 	if err != nil {
 		return err
 	}
-	appData, err := ReadAppFile(app.Repository)
-	if err != nil {
-		return err
-	}
+	appData := ReadAppFile(app.Repository)
+
 	appData.Products = append(appData.Products, productName)
-	err = WriteAppFile(appData)
-	if err != nil {
-		return err
-	}
+	WriteAppFile(appData)
+
 	err = CommitAll(appData.Repository)
-	if err != nil {
-		return err
-	}
+	errors.Check(err).NewInternal("failed to commit to repository").Panic()
+
 	return Push(c, appData.Repository, credentials)
 }
