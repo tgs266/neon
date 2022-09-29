@@ -107,6 +107,10 @@ func InstallRepository() repositories.InstallRepository {
 	return repositories.InstallRepository{DB: store.db}
 }
 
+func CredentialsRepository() repositories.CredentialsRepository {
+	return repositories.CredentialsRepository{DB: store.db}
+}
+
 func List[T any]() ([]T, error) {
 	items := []T{}
 	err := store.db.NewSelect().

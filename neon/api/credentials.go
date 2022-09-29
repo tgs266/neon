@@ -3,7 +3,8 @@ package api
 import (
 	"strings"
 
-	"k8s.io/apimachinery/pkg/api/errors"
+	"github.com/gin-gonic/gin"
+	"github.com/tgs266/neon/neon/errors"
 )
 
 type AddCredentialsRequest struct {
@@ -15,17 +16,24 @@ type AddCredentialsRequest struct {
 	Token string `json:"token"`
 }
 
-func (a AddCredentialsRequest) Validate() {
+type AddCredentialsResponse struct {
+	Name string `json:"name"`
+}
+
+func (a AddCredentialsRequest) Validate(c *gin.Context) {
 	if a.Name == "" || strings.Contains(a.Name, " ") {
-		panic(errors.NewBadRequest("name cannot be empty or contain spaces"))
+		errors.NewBadRequest("name cannot be empty or contain spaces", nil).Abort(c)
+		return
 	}
 
 	if a.Username != "" && a.Password == "" || a.Username == "" && a.Password != "" {
-		panic(errors.NewBadRequest("if using username/password auth, must provide both"))
+		errors.NewBadRequest("if using username/password auth, must provide both", nil).Abort(c)
+		return
 	}
 
 	if a.Username == "" && a.Password == "" && a.Token == "" {
-		panic(errors.NewBadRequest("must provide authentication parameters"))
+		errors.NewBadRequest("must provide authentication parameters", nil).Abort(c)
+		return
 	}
 
 }

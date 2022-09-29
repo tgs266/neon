@@ -8,8 +8,9 @@ type ErrorCode struct {
 }
 
 var (
-	NOT_FOUND = ErrorCode{Code: "NOT_FOUND", StatusCode: 404}
-	INTERNAL  = ErrorCode{Code: "INTERNAL", StatusCode: 500}
+	NOT_FOUND   = ErrorCode{Code: "NOT_FOUND", StatusCode: 404}
+	INTERNAL    = ErrorCode{Code: "INTERNAL", StatusCode: 500}
+	BAD_REQUEST = ErrorCode{Code: "BAD_REQUEST", StatusCode: 400}
 )
 
 type NeonError struct {

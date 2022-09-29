@@ -25,3 +25,7 @@ func NewNotFound(message string, cause error, parameters ...map[string]any) *Neo
 func NewInternal(message string, cause error, parameters ...map[string]any) *NeonError {
 	return createBase(message, cause, parameters).SetErrorCode(INTERNAL)
 }
+
+func NewBadRequest(message string, cause error, parameters ...map[string]any) *NeonError {
+	return createBase(message, cause, parameters).SetErrorCode(BAD_REQUEST)
+}

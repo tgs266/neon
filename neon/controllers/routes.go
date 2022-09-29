@@ -22,4 +22,6 @@ func Routes(r *gin.Engine) {
 
 	r.GET("/api/v1/kubernetes/pods/:namespace/:name", GetPod)
 	r.GET("/api/v1/kubernetes/pods/:namespace/:name/status", GetPodStatus)
+
+	r.POST("/api/v1/credentials", AddCredentials)
 }
