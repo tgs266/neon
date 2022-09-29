@@ -199,6 +199,8 @@ func GetAppInstallResources(c *gin.Context, name, productName string) api.Resour
 func UpdateInstallConfig(c *gin.Context, name, productName string, commit api.InstallConfigCommit) api.InstallConfigCommit {
 	app := GetAppByName(c, name)
 	install := GetAppInstall(c, name, productName)
+	release, err := store.ReleaseRepository().FindByNameVersion(productName, install.ReleaseVersion)
+	errors.Check(err).NewNotFound("release not found").Panic()
 
 	credentials, err := store.CredentialsRepository().GetByName(app.Credentials)
 	errors.Check(err).NewNotFound("creds not found").Panic()
@@ -206,10 +208,7 @@ func UpdateInstallConfig(c *gin.Context, name, productName string, commit api.In
 	git.WriteUpdate(c, credentials, app.Repository, productName, commit)
 
 	store.QueuedChangeRepository().Insert(entities.QueuedChange{
-		Release: entities.Release{
-			ProductName:    productName,
-			ProductVersion: install.ReleaseVersion,
-		},
+		Release:     release,
 		Type:        "UPDATE",
 		TargetApp:   name,
 		LastChecked: time.Now(),

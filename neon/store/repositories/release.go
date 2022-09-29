@@ -38,3 +38,14 @@ func (r ReleaseRepository) Query(query string, args ...interface{}) (entities.Re
 	err := call.Scan(context.TODO())
 	return item, err
 }
+
+func (r ReleaseRepository) FindByNameVersion(name, version string) (entities.Release, error) {
+	var item entities.Release
+	call := r.DB.NewSelect().
+		Model(&item).
+		Where("product_name = ?", name).
+		Where("product_version = ?", version)
+
+	err := call.Scan(context.TODO())
+	return item, err
+}
