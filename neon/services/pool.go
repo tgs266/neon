@@ -100,6 +100,7 @@ func RunJob() {
 	if err != nil {
 		return
 	}
+	fmt.Println(qc)
 	newQc, err := RunQueuedChange(&qc)
 	fmt.Println(err)
 	newQc.LastChecked = time.Now()
