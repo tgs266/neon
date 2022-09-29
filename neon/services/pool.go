@@ -92,6 +92,8 @@ func RunInstallChange(change *entities.QueuedChange, app entities.App) (*entitie
 	}
 
 	err = store.InstallRepository().Insert(install)
+	fmt.Println(install)
+	fmt.Println(err)
 	return change, err
 }
 
