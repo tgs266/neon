@@ -10,6 +10,7 @@ import (
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/tgs266/neon/neon/controllers"
+	"github.com/tgs266/neon/neon/errors"
 	"github.com/tgs266/neon/neon/kubernetes"
 	"github.com/tgs266/neon/neon/services"
 	"github.com/tgs266/neon/neon/store"
@@ -70,6 +71,16 @@ func Start(host, username, password, port string, useUi bool, reset bool, inClus
 			}
 		})
 	}
+	r.Use(func(ctx *gin.Context) {
+		defer func() {
+			if r := recover(); r != nil {
+				if err, ok := r.(*errors.NeonError); ok {
+					ctx.JSON(err.ErrorCode().StatusCode, err.ToSerializableError())
+				}
+			}
+			ctx.Next()
+		}()
+	})
 	controllers.Routes(r)
 	services.InitPool(2)
 	r.Run(":" + port)

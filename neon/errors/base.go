@@ -24,6 +24,10 @@ func (s *NeonError) Error() string {
 	return s.message
 }
 
+func (s *NeonError) ErrorCode() ErrorCode {
+	return s.errorCode
+}
+
 func (s *NeonError) Cause() error {
 	return s.cause
 }
@@ -33,7 +37,7 @@ func (s *NeonError) SetErrorCode(code ErrorCode) *NeonError {
 	return s
 }
 
-func (s *NeonError) toSerializableError() *SerializableError {
+func (s *NeonError) ToSerializableError() *SerializableError {
 	return &SerializableError{
 		ErrorCode:  s.errorCode.Code,
 		Message:    s.message,
@@ -42,5 +46,5 @@ func (s *NeonError) toSerializableError() *SerializableError {
 }
 
 func (s *NeonError) Abort(c *gin.Context) {
-	c.AbortWithStatusJSON(s.errorCode.StatusCode, s.toSerializableError())
+	c.AbortWithStatusJSON(s.errorCode.StatusCode, s.ToSerializableError())
 }

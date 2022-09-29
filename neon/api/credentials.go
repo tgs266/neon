@@ -28,17 +28,17 @@ type Credential struct {
 
 func (a AddCredentialsRequest) Validate(c *gin.Context) {
 	if a.Name == "" || strings.Contains(a.Name, " ") {
-		errors.NewBadRequest("name cannot be empty or contain spaces", nil).Abort(c)
+		panic(errors.NewBadRequest("name cannot be empty or contain spaces", nil))
 		return
 	}
 
 	if a.Username != "" && a.Password == "" || a.Username == "" && a.Password != "" {
-		errors.NewBadRequest("if using username/password auth, must provide both", nil).Abort(c)
+		panic(errors.NewBadRequest("if using username/password auth, must provide both", nil))
 		return
 	}
 
 	if a.Username == "" && a.Password == "" && a.Token == "" {
-		errors.NewBadRequest("must provide authentication parameters", nil).Abort(c)
+		panic(errors.NewBadRequest("must provide authentication parameters", nil))
 		return
 	}
 
