@@ -2,12 +2,14 @@ package services
 
 import (
 	"bytes"
+	"fmt"
 	"os/exec"
 
 	"github.com/tgs266/neon/neon/store/entities"
 )
 
 func installUpdateHelmChart(namespace string, name string, release *entities.Release, pathToConfig string) (string, string, error) {
+	fmt.Println("helm", "upgrade", "-f", pathToConfig, name, release.HelmChart, "--version="+release.ProductVersion, "--namespace="+namespace, "-i", "--create-namespace")
 	cmd := exec.Command("helm", "upgrade", "-f", pathToConfig, name, release.HelmChart, "--version="+release.ProductVersion, "--namespace="+namespace, "-i", "--create-namespace")
 	var out bytes.Buffer
 	var out2 bytes.Buffer
