@@ -52,6 +52,15 @@ func GetAppInstallConfig(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
+func UpdateInstallConfig(c *gin.Context) {
+	var req api.InstallConfigCommit
+	c.BindJSON(&req)
+	name := c.Param("name")
+	productName := c.Param("productName")
+	resp := services.UpdateInstallConfig(c, name, productName, req)
+	c.JSON(http.StatusOK, resp)
+}
+
 func GetAppInstallResources(c *gin.Context) {
 	name := c.Param("name")
 	productName := c.Param("productName")
