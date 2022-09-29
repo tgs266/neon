@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/rand"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -19,7 +20,9 @@ func WriteKey() error {
 	if dir == "" {
 		panic("must set NEON_HOME env")
 	}
-	d1 := []byte(GenerateNewKey())
+	key := GenerateNewKey()
+	fmt.Println(key)
+	d1 := []byte(key)
 	err := os.WriteFile(path.Join(dir, "keys"), d1, 0644)
 	return err
 }
