@@ -1,6 +1,8 @@
 package services
 
 import (
+	"os"
+	"path"
 	"time"
 
 	"github.com/gammazero/workerpool"
@@ -54,8 +56,9 @@ func RunDeleteChange(change *entities.QueuedChange, app entities.App) (*entities
 
 func RunUpdateChange(change *entities.QueuedChange, app entities.App) (*entities.QueuedChange, error) {
 	release := change.Release
-
-	stderr, err := installUpdateHelmChart(app.Name, release.ProductName, &release)
+	dir := os.Getenv("NEON_HOME")
+	pathToConfig := path.Join(dir, path.Base(app.Repository), "neon", release.ProductName, "overrides.yaml")
+	stderr, err := installUpdateHelmChart(app.Name, release.ProductName, &release, pathToConfig)
 	if err != nil {
 		change.Details = stderr
 		return change, err
@@ -74,7 +77,10 @@ func RunUpdateChange(change *entities.QueuedChange, app entities.App) (*entities
 func RunInstallChange(change *entities.QueuedChange, app entities.App) (*entities.QueuedChange, error) {
 	release := change.Release
 
-	stderr, err := installUpdateHelmChart(app.Name, release.ProductName, &release)
+	dir := os.Getenv("NEON_HOME")
+	pathToConfig := path.Join(dir, path.Base(app.Repository), "neon", release.ProductName, "overrides.yaml")
+
+	stderr, err := installUpdateHelmChart(app.Name, release.ProductName, &release, pathToConfig)
 
 	install := entities.Install{
 		AppName:        app.Name,

@@ -198,10 +198,23 @@ func GetAppInstallResources(c *gin.Context, name, productName string) api.Resour
 
 func UpdateInstallConfig(c *gin.Context, name, productName string, commit api.InstallConfigCommit) api.InstallConfigCommit {
 	app := GetAppByName(c, name)
+	install := GetAppInstall(c, name, productName)
+
 	credentials, err := store.CredentialsRepository().GetByName(app.Credentials)
 	errors.Check(err).NewNotFound("creds not found").Panic()
 
 	git.WriteUpdate(c, credentials, app.Repository, productName, commit)
+
+	store.QueuedChangeRepository().Insert(entities.QueuedChange{
+		Release: entities.Release{
+			ProductName:    name,
+			ProductVersion: install.ReleaseVersion,
+		},
+		Type:        "UPDATE",
+		TargetApp:   name,
+		LastChecked: time.Now(),
+		ID:          uuid.New().String(),
+	})
 
 	return commit
 }
