@@ -30,6 +30,7 @@ func (a InstallRepository) Update(item entities.Install) error {
 	_, err := a.DB.NewUpdate().
 		Model(&item).
 		Set("updated_at = ?", time.Now()).
+		Set("error = ?", item.Error).
 		OmitZero().
 		WherePK().
 		Exec(context.TODO())
